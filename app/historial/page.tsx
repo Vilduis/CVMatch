@@ -1,30 +1,12 @@
 import { desc, eq } from "drizzle-orm"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { ChevronRight, FileSearch } from "lucide-react"
+import { FileSearch } from "lucide-react"
 import { auth } from "@/auth"
 import { db } from "@/db"
 import { analyses, users } from "@/db/schema"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-
-function ScoreBadge({ score }: { score: number }) {
-  return (
-    <span
-      className={cn(
-        "shrink-0 text-sm font-bold tabular-nums px-3 py-1 rounded-full",
-        score >= 70
-          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400"
-          : score >= 50
-            ? "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400"
-            : "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400"
-      )}
-    >
-      {score}%
-    </span>
-  )
-}
+import { AnalisisCard } from "./analisis-card"
 
 export default async function HistorialPage() {
   const session = await auth()
@@ -51,7 +33,10 @@ export default async function HistorialPage() {
           </p>
         </div>
         <Link href="/analizar">
-          <Button className="bg-linear-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-700 hover:to-violet-700" size="sm">
+          <Button
+            className="bg-linear-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-700 hover:to-violet-700"
+            size="sm"
+          >
             Nuevo análisis
           </Button>
         </Link>
@@ -73,26 +58,7 @@ export default async function HistorialPage() {
       ) : (
         <div className="space-y-3">
           {userAnalyses.map((analysis) => (
-            <Link key={analysis.id} href={`/resultado/${analysis.id}`}>
-              <Card className="card-hover cursor-pointer border-border/60 shadow-sm">
-                <CardContent className="flex items-center gap-4 p-4">
-                  <ScoreBadge score={analysis.matchScore} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">
-                      {analysis.jobDescription.slice(0, 100)}...
-                    </p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
-                      {new Date(analysis.createdAt).toLocaleDateString("es-PE", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </CardContent>
-              </Card>
-            </Link>
+            <AnalisisCard key={analysis.id} analysis={analysis} />
           ))}
         </div>
       )}
