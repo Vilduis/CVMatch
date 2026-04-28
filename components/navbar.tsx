@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { History, CreditCard, LogOut } from "lucide-react"
 import { auth, signIn, signOut } from "@/auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -71,10 +72,16 @@ export default async function Navbar() {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/historial">Mi historial</Link>
+                  <Link href="/historial" className="flex items-center gap-2">
+                    <History className="h-4 w-4" />
+                    Mi historial
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/precios">Comprar créditos</Link>
+                  <Link href="/precios" className="flex items-center gap-2">
+                    <CreditCard className="h-4 w-4" />
+                    Comprar créditos
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
@@ -86,8 +93,9 @@ export default async function Navbar() {
                   >
                     <button
                       type="submit"
-                      className="w-full text-left text-sm text-destructive"
+                      className="flex w-full items-center gap-2 text-left text-sm text-destructive"
                     >
+                      <LogOut className="h-4 w-4" />
                       Cerrar sesión
                     </button>
                   </form>
