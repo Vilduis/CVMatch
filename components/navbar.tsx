@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { History, CreditCard, LogOut } from "lucide-react"
-import { auth, signIn, signOut } from "@/auth"
+import { auth } from "@/auth"
+import { signInWithGoogle, signOutAction } from "@/app/actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -85,12 +86,7 @@ export default async function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <form
-                    action={async () => {
-                      "use server"
-                      await signOut({ redirectTo: "/" })
-                    }}
-                  >
+                  <form action={signOutAction}>
                     <button
                       type="submit"
                       className="flex w-full items-center gap-2 text-left text-sm text-destructive"
@@ -103,13 +99,7 @@ export default async function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <form
-              action={async () => {
-                "use server"
-                await signIn("google")
-              }}
-              className="ml-2"
-            >
+            <form action={signInWithGoogle} className="ml-2">
               <Button
                 type="submit"
                 size="sm"
