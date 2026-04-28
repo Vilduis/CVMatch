@@ -9,6 +9,8 @@ import "./globals.css"
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
 
+export const dynamic = "force-dynamic"
+
 export const metadata = {
   title: "CVMatch AI — Analiza tu CV con IA",
   description:
