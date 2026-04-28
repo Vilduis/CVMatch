@@ -41,20 +41,35 @@ export default function Page() {
       <section className="hero-gradient relative py-16 text-white sm:py-24">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="container relative mx-auto max-w-4xl px-4 text-center">
-          <Badge className="mb-6 border border-white/20 bg-white/10 text-white backdrop-blur-sm">
+          <Badge
+            data-aos="fade-up"
+            className="mb-6 border border-white/20 bg-white/10 text-white backdrop-blur-sm"
+          >
             <Zap className="mr-1 h-3 w-3" />
             Potenciado por Gemini AI
           </Badge>
-          <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+          <h1
+            data-aos="fade-up"
+            data-aos-delay="100"
+            className="mb-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl"
+          >
             ¿Eres el candidato ideal
             <br />
             para ese trabajo?
           </h1>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-white/80 sm:text-xl">
+          <p
+            data-aos="fade-up"
+            data-aos-delay="200"
+            className="mx-auto mb-10 max-w-2xl text-lg text-white/80 sm:text-xl"
+          >
             Sube tu CV, pega la descripción del puesto y la IA te dice exactamente
             qué tan buen match eres — y cómo mejorar tus chances.
           </p>
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <div
+            data-aos="fade-up"
+            data-aos-delay="300"
+            className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+          >
             <Link href="/analizar">
               <Button size="lg" className="w-full bg-white text-indigo-700 shadow-lg hover:bg-white/90 sm:w-auto">
                 Analizar mi CV gratis
@@ -72,15 +87,20 @@ export default function Page() {
       {/* Cómo funciona */}
       <section className="py-12 sm:py-20">
         <div className="container mx-auto max-w-5xl px-4">
-          <div className="mb-12 text-center">
+          <div data-aos="fade-up" className="mb-12 text-center">
             <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
               Cómo funciona
             </p>
             <h2 className="text-2xl font-bold sm:text-3xl">Tres pasos, segundos de espera</h2>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {steps.map((step) => (
-              <div key={step.number} className="flex flex-col items-center text-center">
+            {steps.map((step, i) => (
+              <div
+                key={step.number}
+                data-aos="fade-up"
+                data-aos-delay={String(i * 100)}
+                className="flex flex-col items-center text-center"
+              >
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-xl font-bold text-primary">
                   {step.number}
                 </div>
@@ -95,15 +115,20 @@ export default function Page() {
       {/* Features */}
       <section className="bg-muted/40 py-12 sm:py-20">
         <div className="container mx-auto max-w-5xl px-4">
-          <div className="mb-12 text-center">
+          <div data-aos="fade-up" className="mb-12 text-center">
             <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
               Resultados
             </p>
             <h2 className="text-2xl font-bold sm:text-3xl">Todo lo que necesitas para prepararte</h2>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {features.map(({ icon: Icon, title, description }) => (
-              <Card key={title} className="card-hover border-border/60 bg-card shadow-sm">
+            {features.map(({ icon: Icon, title, description }, i) => (
+              <Card
+                key={title}
+                data-aos="fade-up"
+                data-aos-delay={String(i * 100)}
+                className="card-hover border-border/60 bg-card shadow-sm"
+              >
                 <CardContent className="flex gap-4 p-6">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                     <Icon className="h-5 w-5 text-primary" />
@@ -122,12 +147,14 @@ export default function Page() {
       {/* CTA final */}
       <section className="py-14 sm:py-24">
         <div className="container mx-auto max-w-2xl px-4 text-center">
-          <h2 className="mb-4 text-2xl font-bold sm:text-3xl">Empieza ahora, es gratis</h2>
-          <p className="mb-8 text-muted-foreground">
+          <h2 data-aos="fade-up" className="mb-4 text-2xl font-bold sm:text-3xl">
+            Empieza ahora, es gratis
+          </h2>
+          <p data-aos="fade-up" data-aos-delay="100" className="mb-8 text-muted-foreground">
             Sin registro necesario para tu primer análisis.
             Solo sube tu CV y pega la oferta de trabajo.
           </p>
-          <Link href="/analizar">
+          <Link data-aos="fade-up" data-aos-delay="200" href="/analizar">
             <Button size="lg" className="bg-linear-to-r from-indigo-600 to-violet-600 text-white shadow-md hover:from-indigo-700 hover:to-violet-700">
               Analizar mi CV ahora
             </Button>

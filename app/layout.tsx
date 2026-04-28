@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Toaster } from "sonner"
 import Navbar from "@/components/navbar"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AosInit } from "@/components/aos-init"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         <ThemeProvider>
+          <AosInit />
           <Navbar />
           {children}
           <Toaster richColors position="top-right" />
