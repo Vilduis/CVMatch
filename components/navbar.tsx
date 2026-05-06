@@ -17,24 +17,24 @@ export default async function Navbar() {
   const session = await auth()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-white/90 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-600 to-violet-600 text-sm font-bold text-white shadow-sm">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground shadow-sm">
             CV
           </div>
           <span className="text-lg font-bold tracking-tight">
-            CVMatch <span className="gradient-text">AI</span>
+            CVMatch <span className="text-primary">AI</span>
           </span>
         </Link>
 
-        {/* Desktop nav — oculto en móvil */}
-        <nav className="hidden items-center gap-1 sm:flex">
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-0.5 sm:flex">
           <Link href="/analizar">
             <Button
               variant="ghost"
               size="sm"
-              className="text-muted-foreground hover:text-foreground"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Analizar CV
             </Button>
@@ -43,7 +43,7 @@ export default async function Navbar() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-muted-foreground hover:text-foreground"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Precios
             </Button>
@@ -52,12 +52,12 @@ export default async function Navbar() {
           {session?.user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="ml-2 h-8 w-8 cursor-pointer ring-2 ring-primary/20 transition-all hover:ring-primary/50">
+                <Avatar className="ml-3 h-8 w-8 cursor-pointer ring-2 ring-primary/20 transition-all hover:ring-primary/50">
                   <AvatarImage
                     src={session.user.image ?? ""}
                     alt={session.user.name ?? ""}
                   />
-                  <AvatarFallback className="bg-linear-to-br from-indigo-500 to-violet-500 text-xs font-semibold text-white">
+                  <AvatarFallback className="bg-primary text-xs font-semibold text-primary-foreground">
                     {session.user.name?.[0]?.toUpperCase() ?? "U"}
                   </AvatarFallback>
                 </Avatar>
@@ -99,11 +99,11 @@ export default async function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <form action={signInWithGoogle} className="ml-2">
+            <form action={signInWithGoogle} className="ml-3">
               <Button
                 type="submit"
                 size="sm"
-                className="bg-linear-to-r from-indigo-600 to-violet-600 text-white shadow-sm hover:from-indigo-700 hover:to-violet-700"
+                className="bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
               >
                 Iniciar sesión
               </Button>
@@ -111,7 +111,7 @@ export default async function Navbar() {
           )}
         </nav>
 
-        {/* Menú hamburguesa-movil */}
+        {/* Menú hamburguesa móvil */}
         <MobileMenu session={session} />
       </div>
     </header>

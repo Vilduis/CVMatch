@@ -8,7 +8,8 @@ import { analyses, users } from "@/db/schema"
 import { analyzeCv } from "@/lib/gemini"
 import { parseCv } from "@/lib/parse-cv"
 
-export const FREE_COOKIE = "cvmatch_free_used"
+export const FREE_COOKIE = "cvmatch_free_count"
+export const FREE_MAX = 5
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData()
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
   const session = await auth()
 
   let dbUserId: string | null = null
+  let freeCount = 0
 
   if (session?.user?.email) {
     // Usuario autenticado: verificar créditos y obtener ID real de DB
@@ -40,11 +42,12 @@ export async function POST(req: NextRequest) {
     }
     dbUserId = user.id
   } else {
-    // Invitado: verificar si ya usó el análisis gratuito
+    // Invitado: verificar cuántos análisis gratuitos ha usado
     const cookieStore = await cookies()
-    if (cookieStore.get(FREE_COOKIE)) {
+    freeCount = parseInt(cookieStore.get(FREE_COOKIE)?.value ?? "0", 10)
+    if (freeCount >= FREE_MAX) {
       return NextResponse.json(
-        { error: "Ya usaste tu análisis gratuito", code: "FREE_USED" },
+        { error: "Ya usaste tus análisis gratuitos", code: "FREE_USED" },
         { status: 402 }
       )
     }
@@ -91,9 +94,9 @@ export async function POST(req: NextRequest) {
 
   const response = NextResponse.json({ id })
 
-  // Marcar análisis gratuito como usado para invitados
+  // Incrementar contador de análisis gratuitos para invitados
   if (!dbUserId) {
-    response.cookies.set(FREE_COOKIE, "1", {
+    response.cookies.set(FREE_COOKIE, String(freeCount + 1), {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
