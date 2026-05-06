@@ -42,11 +42,7 @@ export default function BuyButton({ planId, credits, popular }: BuyButtonProps) 
     <Button
       onClick={handleBuy}
       disabled={loading}
-      className={`w-full ${
-        popular
-          ? "bg-linear-to-r from-indigo-600 to-violet-600 text-white shadow-md hover:from-indigo-700 hover:to-violet-700"
-          : ""
-      }`}
+      className={`w-full ${popular ? "shadow-md" : ""}`}
       variant={popular ? "default" : "outline"}
     >
       {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}

@@ -22,6 +22,11 @@ export const analyses = pgTable("analyses", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 })
 
+export const stripeEvents = pgTable("stripe_events", {
+  eventId: text("event_id").primaryKey(),
+  processedAt: timestamp("processed_at").notNull().defaultNow(),
+})
+
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
 export type Analysis = typeof analyses.$inferSelect

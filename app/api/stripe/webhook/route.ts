@@ -2,12 +2,10 @@ import Stripe from "stripe"
 import { eq, sql } from "drizzle-orm"
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
-import { users } from "@/db/schema"
+import { stripeEvents, users } from "@/db/schema"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-// Next.js App Router no consume el body automáticamente, pero igual
-// lo indicamos explícitamente para claridad
 export const dynamic = "force-dynamic"
 
 export async function POST(req: NextRequest) {
@@ -33,21 +31,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Firma inválida: ${message}` }, { status: 400 })
   }
 
+  // Idempotencia: ignorar eventos ya procesados
+  const existing = await db.query.stripeEvents.findFirst({
+    where: eq(stripeEvents.eventId, event.id),
+    columns: { eventId: true },
+  })
+  if (existing) {
+    return NextResponse.json({ received: true })
+  }
+
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session
 
     if (session.payment_status === "paid") {
-      const userEmail = session.customer_email
+      const userId = session.metadata?.userId
       const credits = parseInt(session.metadata?.credits ?? "0", 10)
 
-      if (userEmail && credits > 0) {
+      if (userId && credits > 0) {
         await db
           .update(users)
           .set({ credits: sql`${users.credits} + ${credits}` })
-          .where(eq(users.email, userEmail))
+          .where(eq(users.id, userId))
       }
     }
   }
+
+  // Registrar el evento como procesado
+  await db.insert(stripeEvents).values({ eventId: event.id }).onConflictDoNothing()
 
   return NextResponse.json({ received: true })
 }

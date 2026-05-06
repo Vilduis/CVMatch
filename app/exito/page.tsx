@@ -76,7 +76,7 @@ export default async function ExitoPage({
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <Link href="/analizar">
-          <Button className="bg-linear-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-700 hover:to-violet-700">
+          <Button className="shadow-md">
             Analizar mi CV ahora
           </Button>
         </Link>
