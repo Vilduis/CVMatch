@@ -18,24 +18,32 @@ const features = [
     title: "Puntaje de match",
     description:
       "Un score del 0 al 100 que refleja qué tan bien encajas con el puesto. Preciso, instantáneo.",
+    iconClass: "icon-primary",
+    iconColor: "text-primary",
   },
   {
     icon: TrendingUp,
     title: "Fortalezas y brechas",
     description:
       "Detecta exactamente qué tienes a tu favor y qué habilidades te faltan para el rol.",
+    iconClass: "icon-emerald",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
   },
   {
     icon: FileText,
     title: "Mejoras para tu CV",
     description:
       "Sugerencias concretas para adaptar tu CV a este puesto específico y destacar.",
+    iconClass: "icon-amber",
+    iconColor: "text-amber-600 dark:text-amber-400",
   },
   {
     icon: MessageSquare,
     title: "Preguntas de entrevista",
     description:
       "Si tu match es ≥ 70%, recibes las preguntas que probablemente te harán con guía STAR.",
+    iconClass: "icon-violet",
+    iconColor: "text-violet-600 dark:text-violet-400",
   },
 ]
 
@@ -135,7 +143,7 @@ export default function Page() {
       </section>
 
       {/* Stats */}
-      <section className="border-y border-border/60 bg-muted/30 py-10 sm:py-12">
+      <section className="border-y border-border/60 bg-section-slate py-10 sm:py-12">
         <div className="container mx-auto max-w-3xl px-4">
           <div className="grid grid-cols-1 gap-6 text-center sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-border/60">
             {stats.map(({ value, label }) => (
@@ -189,7 +197,7 @@ export default function Page() {
       </section>
 
       {/* Features */}
-      <section className="bg-muted/30 py-16 sm:py-24">
+      <section className="bg-section-emerald py-16 sm:py-24">
         <div className="container mx-auto max-w-5xl px-4">
           <div data-aos="fade-up" className="mb-14 text-center">
             <div className="badge-chip mb-4 inline-flex">
@@ -205,15 +213,15 @@ export default function Page() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {features.map(({ icon: Icon, title, description }, i) => (
+            {features.map(({ icon: Icon, title, description, iconClass, iconColor }, i) => (
               <div
                 key={title}
                 data-aos="fade-up"
                 data-aos-delay={String(i * 80)}
                 className="card-elevated group p-6"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 transition-colors group-hover:bg-primary/15">
-                  <Icon className="h-6 w-6 text-primary" />
+                <div className={`mb-4 h-12 w-12 ${iconClass}`}>
+                  <Icon className={`h-6 w-6 ${iconColor}`} />
                 </div>
                 <h3 className="mb-2 font-semibold">{title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>

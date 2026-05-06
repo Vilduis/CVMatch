@@ -158,7 +158,7 @@ export default async function ResultadoPage({
         </TabsList>
 
         <TabsContent value="fortalezas">
-          <Card className="border-border/60 shadow-sm">
+          <Card className="card-accent-emerald border-border/60 shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-base">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-950/40">
@@ -168,11 +168,11 @@ export default async function ResultadoPage({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {strengths.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm leading-relaxed">
+                  <li key={i} className="flex items-start gap-3 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm leading-relaxed dark:bg-emerald-950/20">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
-                    <span className="text-muted-foreground">{item}</span>
+                    <span className="text-foreground/80">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -181,7 +181,7 @@ export default async function ResultadoPage({
         </TabsContent>
 
         <TabsContent value="brechas">
-          <Card className="border-border/60 shadow-sm">
+          <Card className="card-accent-rose border-border/60 shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-base">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 dark:bg-rose-950/40">
@@ -191,11 +191,11 @@ export default async function ResultadoPage({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {gaps.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm leading-relaxed">
+                  <li key={i} className="flex items-start gap-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm leading-relaxed dark:bg-rose-950/20">
                     <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
-                    <span className="text-muted-foreground">{item}</span>
+                    <span className="text-foreground/80">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -204,7 +204,7 @@ export default async function ResultadoPage({
         </TabsContent>
 
         <TabsContent value="cv">
-          <Card className="border-border/60 shadow-sm">
+          <Card className="card-accent-primary border-border/60 shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-base">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
@@ -214,11 +214,11 @@ export default async function ResultadoPage({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {cvSuggestions.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm leading-relaxed">
+                  <li key={i} className="flex items-start gap-3 rounded-lg bg-primary/5 px-3 py-2.5 text-sm leading-relaxed">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    <span className="text-muted-foreground">{item}</span>
+                    <span className="text-foreground/80">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -228,25 +228,25 @@ export default async function ResultadoPage({
 
         {interviewQuestions && (
           <TabsContent value="entrevista">
-            <Card className="border-border/60 shadow-sm">
+            <Card className="card-accent-violet border-border/60 shadow-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                    <MessageSquare className="h-4 w-4 text-primary" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-950/40">
+                    <MessageSquare className="h-4 w-4 text-violet-600 dark:text-violet-400" />
                   </div>
                   Preguntas probables de entrevista
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="mb-4 text-xs text-muted-foreground">
-                  Prepara respuestas usando el método <span className="font-semibold text-foreground">STAR</span> (Situación → Tarea → Acción → Resultado).
+                <p className="mb-4 rounded-lg bg-violet-50 px-3 py-2 text-xs text-violet-700 dark:bg-violet-950/20 dark:text-violet-300">
+                  Prepara respuestas usando el método <span className="font-semibold">STAR</span> — Situación → Tarea → Acción → Resultado.
                 </p>
                 <Accordion type="single" collapsible className="w-full">
                   {interviewQuestions.map((question, i) => (
                     <AccordionItem key={i} value={`q-${i}`}>
                       <AccordionTrigger className="text-left text-sm font-medium hover:no-underline">
                         <span className="flex items-start gap-3">
-                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-700 dark:bg-violet-950/50 dark:text-violet-300">
                             {i + 1}
                           </span>
                           {question.replace(/^\d+[\.\-\)]\s*/, "")}
@@ -254,11 +254,16 @@ export default async function ResultadoPage({
                       </AccordionTrigger>
                       <AccordionContent className="pl-8 text-sm text-muted-foreground">
                         Estructura tu respuesta con un ejemplo concreto de tu experiencia:
-                        <ul className="mt-2 space-y-1">
-                          {["Situación: describe el contexto", "Tarea: explica tu responsabilidad", "Acción: detalla lo que hiciste", "Resultado: muestra el impacto con datos"].map((s) => (
-                            <li key={s} className="flex items-start gap-2">
-                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
-                              {s}
+                        <ul className="mt-2 space-y-1.5">
+                          {[
+                            { label: "Situación", desc: "describe el contexto", color: "bg-violet-400" },
+                            { label: "Tarea", desc: "explica tu responsabilidad", color: "bg-primary" },
+                            { label: "Acción", desc: "detalla lo que hiciste", color: "bg-emerald-400" },
+                            { label: "Resultado", desc: "muestra el impacto con datos", color: "bg-amber-400" },
+                          ].map(({ label, desc, color }) => (
+                            <li key={label} className="flex items-start gap-2">
+                              <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${color}`} />
+                              <span><span className="font-medium text-foreground">{label}:</span> {desc}</span>
                             </li>
                           ))}
                         </ul>
