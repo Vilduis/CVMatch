@@ -21,5 +21,5 @@ export async function deleteAnalysis(analysisId: string) {
     .delete(analyses)
     .where(and(eq(analyses.id, analysisId), eq(analyses.userId, dbUser.id)))
 
-  revalidatePath("/historial")
+  revalidatePath("/dashboard/historial")
 }

@@ -21,5 +21,22 @@ export default async function AnalizarPage() {
     credits = user?.credits ?? 0
   }
 
-  return <AnalizarForm credits={credits} freeRemaining={freeRemaining} />
+  return (
+    <div className="flex flex-col gap-8">
+      <header className="flex flex-col gap-1">
+        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          Workspace
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          Nuevo análisis
+        </h1>
+        <p className="mt-1 max-w-2xl text-[14px] leading-relaxed text-muted-foreground">
+          Sube tu CV y pega la descripción del puesto. Recibirás el match,
+          fortalezas, brechas y mejoras concretas en menos de 30 segundos.
+        </p>
+      </header>
+
+      <AnalizarForm credits={credits} freeRemaining={freeRemaining} />
+    </div>
+  )
 }

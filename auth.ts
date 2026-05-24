@@ -11,30 +11,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.sub) session.user.id = token.sub
       return session
     },
-    jwt({ token, user }) {
-      if (user?.id) token.sub = user.id
-      return token
-    },
-  },
-  events: {
-    async signIn({ user }) {
-      if (!user.email) return
-      const id = user.id ?? randomUUID()
-      await db
-        .insert(users)
-        .values({
-          id,
-          email: user.email,
-          name: user.name ?? null,
-          image: user.image ?? null,
-        })
-        .onConflictDoUpdate({
-          target: users.email,
-          set: {
+    async jwt({ token, user, account }) {
+      // En el evento de sign-in (cuando viene `account`) hacemos upsert
+      // por email y forzamos token.sub al id real de la fila en DB.
+      // Así `session.user.id` siempre coincide con `users.id`.
+      if (account && user?.email) {
+        const email = user.email.trim().toLowerCase()
+        const [row] = await db
+          .insert(users)
+          .values({
+            id: user.id ?? randomUUID(),
+            email,
             name: user.name ?? null,
             image: user.image ?? null,
-          },
-        })
+          })
+          .onConflictDoUpdate({
+            target: users.email,
+            set: {
+              name: user.name ?? null,
+              image: user.image ?? null,
+            },
+          })
+          .returning({ id: users.id })
+
+        if (row) token.sub = row.id
+      }
+      return token
     },
   },
 })

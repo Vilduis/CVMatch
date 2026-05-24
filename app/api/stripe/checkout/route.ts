@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(req: NextRequest) {
   const session = await auth()
-  if (!session?.user?.id) {
+  if (!session?.user?.id || !session.user.email) {
     return NextResponse.json(
       { error: "Debes iniciar sesión para comprar créditos" },
       { status: 401 }
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: "payment",
-    customer_email: session.user.email ?? undefined,
+    customer_email: session.user.email,
     line_items: [
       {
         price_data: {

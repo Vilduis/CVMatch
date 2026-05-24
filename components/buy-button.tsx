@@ -9,9 +9,21 @@ interface BuyButtonProps {
   planId: string
   credits: number
   popular?: boolean
+  variant?: "default" | "outline"
+  size?: "sm" | "default" | "lg"
+  className?: string
+  children?: React.ReactNode
 }
 
-export default function BuyButton({ planId, credits, popular }: BuyButtonProps) {
+export default function BuyButton({
+  planId,
+  credits,
+  popular,
+  variant,
+  size = "sm",
+  className,
+  children,
+}: BuyButtonProps) {
   const [loading, setLoading] = useState(false)
 
   async function handleBuy() {
@@ -38,15 +50,18 @@ export default function BuyButton({ planId, credits, popular }: BuyButtonProps) 
     }
   }
 
+  const resolvedVariant = variant ?? (popular ? "default" : "outline")
+
   return (
     <Button
       onClick={handleBuy}
       disabled={loading}
-      className={`w-full ${popular ? "shadow-md" : ""}`}
-      variant={popular ? "default" : "outline"}
+      size={size}
+      variant={resolvedVariant}
+      className={className ?? "w-full"}
     >
-      {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-      Comprar {credits} análisis
+      {loading && <Loader2 className="size-3.5 animate-spin" />}
+      {children ?? (loading ? "Procesando…" : `Comprar ${credits} análisis`)}
     </Button>
   )
 }

@@ -2,34 +2,33 @@
 
 import { useEffect, useRef } from "react"
 
-const RADIUS = 52
+const RADIUS = 54
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-function getConfig(score: number) {
-  if (score >= 70)
-    return {
-      color: "#10b981",
-      textClass: "text-emerald-600 dark:text-emerald-400",
-    }
-  if (score >= 50)
-    return {
-      color: "#f59e0b",
-      textClass: "text-amber-600 dark:text-amber-400",
-    }
-  return {
-    color: "#f43f5e",
-    textClass: "text-rose-600 dark:text-rose-400",
-  }
+type Level = "excellent" | "moderate" | "low"
+
+function getLevel(score: number): Level {
+  if (score >= 70) return "excellent"
+  if (score >= 50) return "moderate"
+  return "low"
+}
+
+const levelStyles: Record<Level, { stroke: string; text: string }> = {
+  excellent: { stroke: "var(--success)", text: "text-[var(--success)]" },
+  moderate:  { stroke: "var(--warning)", text: "text-[var(--warning)]" },
+  low:       { stroke: "var(--danger)",  text: "text-[var(--danger)]" },
 }
 
 interface ScoreRingProps {
   score: number
   size?: number
+  strokeWidth?: number
 }
 
-export function ScoreRing({ score, size = 160 }: ScoreRingProps) {
+export function ScoreRing({ score, size = 160, strokeWidth = 6 }: ScoreRingProps) {
   const circleRef = useRef<SVGCircleElement>(null)
-  const { color, textClass } = getConfig(score)
+  const level = getLevel(score)
+  const { stroke, text } = levelStyles[level]
   const targetOffset = CIRCUMFERENCE * (1 - score / 100)
 
   useEffect(() => {
@@ -38,50 +37,53 @@ export function ScoreRing({ score, size = 160 }: ScoreRingProps) {
     circle.style.strokeDashoffset = String(CIRCUMFERENCE)
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        circle.style.transition = "stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)"
+        circle.style.transition = "stroke-dashoffset 800ms cubic-bezier(0.16, 1, 0.30, 1)"
         circle.style.strokeDashoffset = String(targetOffset)
       })
     })
   }, [targetOffset])
 
   return (
-    <div className="relative inline-flex items-center justify-center">
+    <div
+      className="relative inline-flex items-center justify-center"
+      style={{ width: size, height: size }}
+    >
       <svg
-        width={size}
-        height={size}
         viewBox="0 0 120 120"
         className="-rotate-90"
+        width={size}
+        height={size}
         aria-hidden="true"
       >
-        {/* Track */}
         <circle
           cx="60"
           cy="60"
           r={RADIUS}
           fill="none"
           stroke="currentColor"
-          strokeWidth="9"
+          strokeWidth={strokeWidth}
           className="text-border"
         />
-        {/* Progress */}
         <circle
           ref={circleRef}
           cx="60"
           cy="60"
           r={RADIUS}
           fill="none"
-          stroke={color}
-          strokeWidth="9"
+          stroke={stroke}
+          strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={CIRCUMFERENCE}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={`text-4xl font-black leading-none tabular-nums ${textClass}`}>
+        <span className={`font-mono text-[44px] font-semibold leading-none tabular-nums ${text}`}>
           {score}
         </span>
-        <span className="mt-0.5 text-sm font-medium text-muted-foreground">%</span>
+        <span className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          / 100
+        </span>
       </div>
     </div>
   )

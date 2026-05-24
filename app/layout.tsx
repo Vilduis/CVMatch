@@ -1,13 +1,20 @@
+import type { ReactNode } from "react"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Toaster } from "sonner"
-import Navbar from "@/components/navbar"
-import { ThemeProvider } from "@/components/theme-provider"
-import { AosInit } from "@/components/aos-init"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
-const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+})
 
 export const dynamic = "force-dynamic"
 
@@ -17,20 +24,16 @@ export const metadata = {
     "Sube tu CV, pega la descripción del trabajo y descubre qué tan buen candidato eres para ese puesto.",
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="es"
+      className={cn("dark", geistSans.variable, geistMono.variable)}
       suppressHydrationWarning
-      className={cn("antialiased", geist.variable, fontMono.variable)}
     >
       <body>
-        <ThemeProvider>
-          <AosInit />
-          <Navbar />
-          {children}
-          <Toaster richColors position="top-right" />
-        </ThemeProvider>
+        {children}
+        <Toaster richColors position="top-right" theme="dark" />
       </body>
     </html>
   )
