@@ -25,7 +25,7 @@ export default async function AnalizarPage() {
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-          Workspace
+          Espacio de trabajo
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">
           Nuevo análisis

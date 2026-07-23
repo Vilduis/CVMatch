@@ -76,7 +76,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
 
       <SidebarContent className="px-1.5 pt-2">
         <NavGroup
-          label="Workspace"
+          label="Espacio de trabajo"
           items={workspaceNav}
           pathname={pathname}
         />

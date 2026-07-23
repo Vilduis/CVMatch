@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Toaster } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body>
         {children}
-        <Toaster richColors position="top-right" theme="dark" />
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   )

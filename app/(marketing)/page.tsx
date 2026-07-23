@@ -209,7 +209,7 @@ export default async function HomePage() {
         <div className="container mx-auto max-w-5xl px-4 sm:px-6">
           <Reveal>
             <SectionHeader
-              eyebrow="Flujo"
+              eyebrow="Cómo funciona"
               title="Tres pasos, sin fricción."
               subtitle="Pensado para que postules más rápido y con mejor preparación."
             />

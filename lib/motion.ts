@@ -23,12 +23,6 @@ export const fadeUp = {
   transition: { duration: duration.slow, ease: ease.out },
 }
 
-export const fadeIn = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  transition: { duration: duration.base, ease: ease.out },
-}
-
 export function stagger(delayPerItem = 0.04) {
   return (index: number) => ({
     ...fadeUp,

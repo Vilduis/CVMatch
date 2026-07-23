@@ -68,7 +68,20 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const result = await analyzeCv(cvText, jobDescription)
+  let result
+  try {
+    result = await analyzeCv(cvText, jobDescription)
+  } catch (err) {
+    console.error("[analyze] Gemini no disponible:", err)
+    return NextResponse.json(
+      {
+        error:
+          "El servicio de análisis con IA no está disponible en este momento. Vuelve a intentarlo en unos minutos.",
+        code: "AI_UNAVAILABLE",
+      },
+      { status: 503 }
+    )
+  }
 
   const id = randomUUID()
 

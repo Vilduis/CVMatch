@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Check, Lock, ShieldCheck, Sparkles } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { plansList } from "@/lib/plans"
-import BuyButton from "./buy-button"
+import BuyButton from "@/components/buy-button"
 
 const beneficios = [
   "Puntaje de match 0–100",
@@ -121,7 +121,7 @@ export default function PreciosPage() {
                 href="/"
                 className="font-medium text-foreground underline-offset-4 hover:underline"
               >
-                Vuelve a la landing →
+                Volver al inicio →
               </Link>
             </p>
           </div>
