@@ -4,7 +4,6 @@ import { ArrowRight, FileSearch, Sparkles } from "lucide-react"
 import { db } from "@/db"
 import { analyses } from "@/db/schema"
 import { Button } from "@/components/ui/button"
-import { StaggerList } from "@/components/stagger"
 import {
   Pagination,
   PaginationContent,
@@ -44,12 +43,18 @@ export default async function HistorialPage({
   const { page: pageParam } = await searchParams
   const page = Math.min(Math.max(1, Number(pageParam) || 1), totalPages)
 
-  const userAnalyses = await db.query.analyses.findMany({
-    where: eq(analyses.userId, dbUser.id),
-    orderBy: [desc(analyses.createdAt)],
-    limit: PER_PAGE,
-    offset: (page - 1) * PER_PAGE,
-  })
+  const userAnalyses = await db
+    .select({
+      id: analyses.id,
+      matchScore: analyses.matchScore,
+      jobSummary: sql<string>`left(${analyses.jobDescription}, 160)`,
+      createdAt: analyses.createdAt,
+    })
+    .from(analyses)
+    .where(eq(analyses.userId, dbUser.id))
+    .orderBy(desc(analyses.createdAt))
+    .limit(PER_PAGE)
+    .offset((page - 1) * PER_PAGE)
 
   const stats = [
     { label: "Análisis totales", value: String(total), suffix: "" },
@@ -121,11 +126,11 @@ export default async function HistorialPage({
               <span className="text-right">Fecha</span>
               <span className="w-[88px]" />
             </div>
-            <StaggerList>
+            <ul className="stagger">
               {userAnalyses.map((analysis) => (
                 <AnalisisRow key={analysis.id} analysis={analysis} />
               ))}
-            </StaggerList>
+            </ul>
           </div>
           {totalPages > 1 && (
             <HistorialPagination page={page} totalPages={totalPages} />

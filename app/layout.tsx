@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 
@@ -16,8 +15,6 @@ const geistMono = Geist_Mono({
   display: "swap",
 })
 
-export const dynamic = "force-dynamic"
-
 export const metadata = {
   title: "CVMatch AI — Analiza tu CV con IA",
   description:
@@ -31,10 +28,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={cn("dark", geistSans.variable, geistMono.variable)}
       suppressHydrationWarning
     >
-      <body>
-        {children}
-        <Toaster richColors position="top-right" />
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

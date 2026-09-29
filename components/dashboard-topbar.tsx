@@ -21,6 +21,8 @@ const segmentLabels: Record<string, string> = {
   resultado: "Resultado",
   creditos: "Créditos",
   perfil: "Perfil",
+  cv: "CV adaptado",
+  cvs: "Mis CVs",
 }
 
 interface TopbarProps {

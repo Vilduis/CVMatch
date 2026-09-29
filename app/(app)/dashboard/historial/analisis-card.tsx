@@ -15,9 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { StaggerListItem } from "@/components/stagger"
 import { deleteAnalysis } from "./actions"
-import type { Analysis } from "@/db/schema"
 
 type Level = "excellent" | "moderate" | "low"
 
@@ -50,7 +48,14 @@ function formatYear(d: Date) {
   return d.getFullYear()
 }
 
-export function AnalisisRow({ analysis }: { analysis: Analysis }) {
+type AnalisisRowData = {
+  id: string
+  matchScore: number
+  jobSummary: string
+  createdAt: Date
+}
+
+export function AnalisisRow({ analysis }: { analysis: AnalisisRowData }) {
   const [pending, startTransition] = useTransition()
   const level = getLevel(analysis.matchScore)
   const { color, label } = levelStyles[level]
@@ -63,7 +68,7 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
   }
 
   return (
-    <StaggerListItem className="group grid grid-cols-[auto_1fr_auto] items-center gap-3 border-t border-border/60 px-4 py-3.5 transition-colors first:border-t-0 hover:bg-card/40 sm:grid-cols-[64px_1fr_auto_88px] sm:gap-4 sm:px-5 sm:py-4">
+    <li className="group grid grid-cols-[auto_1fr_auto] items-center gap-3 border-t border-border/60 px-4 py-3.5 transition-colors first:border-t-0 hover:bg-card/40 sm:grid-cols-[64px_1fr_auto_88px] sm:gap-4 sm:px-5 sm:py-4">
       <div className="flex flex-col items-start gap-0.5 sm:items-center">
         <span
           className="font-mono text-2xl leading-none font-semibold tabular-nums"
@@ -78,7 +83,7 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
 
       <div className="min-w-0">
         <p className="line-clamp-2 text-[13.5px] leading-snug text-foreground/90 sm:line-clamp-1">
-          {summarize(analysis.jobDescription)}
+          {summarize(analysis.jobSummary)}
         </p>
         <p className="mt-1 font-mono text-[11px] text-muted-foreground sm:hidden">
           {formatDate(created)}
@@ -136,6 +141,6 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
           </Link>
         </Button>
       </div>
-    </StaggerListItem>
+    </li>
   )
 }

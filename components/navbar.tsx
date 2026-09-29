@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import type { Session } from "next-auth"
 import { ArrowUpRight, LogOut } from "lucide-react"
 import { signOutAction } from "@/app/actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -14,17 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useClientSession } from "@/hooks/use-client-session"
 import { cn } from "@/lib/utils"
 import LogoMark from "./logo-mark"
 import MobileMenu from "./mobile-menu"
 
 const navLinks = [{ label: "Precios", href: "/precios" }]
 
-interface NavbarProps {
-  session: Session | null
-}
-
-export default function Navbar({ session }: NavbarProps) {
+export default function Navbar() {
+  const { session, loading } = useClientSession()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -119,7 +116,13 @@ export default function Navbar({ session }: NavbarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="ml-2 flex items-center gap-1.5">
+            <div
+              aria-hidden={loading}
+              className={cn(
+                "ml-2 flex items-center gap-1.5",
+                loading && "invisible"
+              )}
+            >
               <Button
                 asChild
                 variant="ghost"
@@ -136,7 +139,7 @@ export default function Navbar({ session }: NavbarProps) {
         </nav>
 
         <div className="flex items-center sm:hidden">
-          <MobileMenu session={session} />
+          <MobileMenu session={session} loading={loading} />
         </div>
       </div>
     </header>

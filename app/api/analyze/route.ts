@@ -1,28 +1,11 @@
 import { randomUUID } from "crypto"
-import { and, eq, gt, sql } from "drizzle-orm"
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { db } from "@/db"
-import { analyses, users } from "@/db/schema"
-import { analyzeCv } from "@/lib/gemini"
+import { analyses } from "@/db/schema"
+import { analyzeCv } from "@/lib/ai"
+import { refundCredit, reserveCredit } from "@/lib/credits"
 import { parseCv } from "@/lib/parse-cv"
-
-// Atómico: dos peticiones simultáneas con 1 crédito no pueden pasar ambas
-async function reserveCredit(userId: string) {
-  const [row] = await db
-    .update(users)
-    .set({ credits: sql`${users.credits} - 1` })
-    .where(and(eq(users.id, userId), gt(users.credits, 0)))
-    .returning({ id: users.id })
-  return Boolean(row)
-}
-
-async function refundCredit(userId: string) {
-  await db
-    .update(users)
-    .set({ credits: sql`${users.credits} + 1` })
-    .where(eq(users.id, userId))
-}
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -78,7 +61,7 @@ export async function POST(req: NextRequest) {
     result = await analyzeCv(cvText, jobDescription)
   } catch (err) {
     await refundCredit(userId)
-    console.error("[analyze] Gemini no disponible:", err)
+    console.error("[analyze] IA no disponible:", err)
     return NextResponse.json(
       {
         error:

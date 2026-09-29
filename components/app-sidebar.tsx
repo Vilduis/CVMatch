@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import {
   ChevronsUpDown,
   CreditCard,
+  FileText,
   History,
   LifeBuoy,
   LogOut,
@@ -12,8 +13,8 @@ import {
   Sparkles,
   User,
 } from "lucide-react"
-import type { Session } from "next-auth"
 import { signOutAction } from "@/app/actions"
+import type { User as DbUser } from "@/db/schema"
 import LogoMark from "@/components/logo-mark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -42,6 +43,7 @@ import { cn } from "@/lib/utils"
 const workspaceNav = [
   { title: "Analizar", href: "/dashboard/analizar", icon: Sparkles },
   { title: "Historial", href: "/dashboard/historial", icon: History },
+  { title: "Mis CVs", href: "/dashboard/cvs", icon: FileText },
 ]
 
 const accountNav = [
@@ -49,11 +51,9 @@ const accountNav = [
   { title: "Perfil", href: "/dashboard/perfil", icon: User },
 ]
 
-interface AppSidebarProps {
-  session: Session | null
-}
+type SidebarUser = Pick<DbUser, "name" | "email" | "image">
 
-export function AppSidebar({ session }: AppSidebarProps) {
+export function AppSidebar({ user }: { user: SidebarUser }) {
   const pathname = usePathname()
 
   return (
@@ -80,7 +80,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-1.5">
-        <UserWidget session={session} />
+        <UserWidget user={user} />
       </SidebarFooter>
 
       <SidebarRail />
@@ -134,48 +134,30 @@ function NavGroup({
   )
 }
 
-function UserWidget({ session }: { session: Session | null }) {
+function UserWidget({ user }: { user: SidebarUser }) {
   const { isMobile } = useSidebar()
 
-  if (!session?.user) {
-    return (
-      <SidebarMenuButton
-        asChild
-        tooltip="Iniciar sesión"
-        className="h-8 rounded-md text-[13px]"
-      >
-        <Link href="/">
-          <User className="size-3.5" />
-          <span>Iniciar sesión</span>
-        </Link>
-      </SidebarMenuButton>
-    )
-  }
-
-  const initial = session.user.name?.[0]?.toUpperCase() ?? "U"
+  const initial = user.name?.[0]?.toUpperCase() ?? "U"
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton
-          tooltip={session.user.name ?? "Cuenta"}
+          tooltip={user.name ?? "Cuenta"}
           className="h-10 gap-2.5 rounded-md px-1.5 hover:bg-sidebar-accent/70 data-[state=open]:bg-sidebar-accent"
         >
           <Avatar className="size-7 shrink-0">
-            <AvatarImage
-              src={session.user.image ?? ""}
-              alt={session.user.name ?? ""}
-            />
+            <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
             <AvatarFallback className="bg-muted text-[10px] font-semibold">
               {initial}
             </AvatarFallback>
           </Avatar>
           <div className="flex min-w-0 flex-1 flex-col text-left group-data-[collapsible=icon]:hidden">
             <span className="truncate text-[12.5px] leading-tight font-medium">
-              {session.user.name ?? "Sin nombre"}
+              {user.name ?? "Sin nombre"}
             </span>
             <span className="truncate text-[10.5px] leading-tight text-muted-foreground">
-              {session.user.email}
+              {user.email}
             </span>
           </div>
           <ChevronsUpDown className="size-3.5 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
@@ -190,10 +172,10 @@ function UserWidget({ session }: { session: Session | null }) {
         <DropdownMenuLabel className="px-2 py-1.5">
           <div className="flex min-w-0 flex-col">
             <span className="truncate text-[12.5px] font-medium">
-              {session.user.name}
+              {user.name}
             </span>
             <span className="truncate text-[10.5px] font-normal text-muted-foreground">
-              {session.user.email}
+              {user.email}
             </span>
           </div>
         </DropdownMenuLabel>

@@ -22,6 +22,18 @@ export const analyses = pgTable("analyses", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 })
 
+export const tailoredCvs = pgTable("tailored_cvs", {
+  analysisId: text("analysis_id")
+    .primaryKey()
+    .references(() => analyses.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  data: text("data").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+})
+
 export const stripeEvents = pgTable("stripe_events", {
   eventId: text("event_id").primaryKey(),
   processedAt: timestamp("processed_at").notNull().defaultNow(),

@@ -3,6 +3,7 @@ import { Check, Lock, ShieldCheck, Sparkles } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { plansList } from "@/lib/plans"
 import BuyButton from "@/components/buy-button"
+import { Toaster } from "@/components/ui/sonner"
 
 const beneficios = [
   "Puntaje de match 0–100",
@@ -33,8 +34,8 @@ export default function PreciosPage() {
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 gap-3 md:grid-cols-3 md:items-stretch">
-          {plansList.map((plan, i) => (
-            <Reveal key={plan.id} delay={i * 0.06}>
+          {plansList.map((plan) => (
+            <Reveal key={plan.id}>
               <div
                 className={
                   "group relative flex h-full flex-col rounded-xl border bg-card/40 p-6 transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md " +
@@ -99,7 +100,7 @@ export default function PreciosPage() {
           ))}
         </div>
 
-        <Reveal delay={0.15}>
+        <Reveal>
           <div className="mx-auto mt-14 flex max-w-xl flex-col items-center gap-2 text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-[12px] text-muted-foreground">
               <Lock className="size-3" />
@@ -115,7 +116,7 @@ export default function PreciosPage() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.2}>
+        <Reveal>
           <div className="mt-14 border-t border-border/60 pt-10 text-center">
             <p className="text-[13px] text-muted-foreground">
               ¿Aún no decides?{" "}
@@ -129,6 +130,7 @@ export default function PreciosPage() {
           </div>
         </Reveal>
       </div>
+      <Toaster richColors position="top-right" />
     </main>
   )
 }

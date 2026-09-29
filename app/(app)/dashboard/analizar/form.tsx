@@ -277,7 +277,7 @@ function JobDescriptionField({
           value={value}
           onChange={(e) => onChange(e.target.value.slice(0, JD_MAX))}
           disabled={disabled}
-          className="min-h-[260px] resize-none font-sans text-[13.5px] leading-relaxed"
+          className="max-h-[320px] min-h-[260px] resize-none overflow-y-auto pb-9 font-sans text-[13.5px] leading-relaxed"
         />
         <div className="pointer-events-none absolute right-3 bottom-2.5 flex items-center gap-2 text-[11px] text-muted-foreground/80">
           {tooShort && (

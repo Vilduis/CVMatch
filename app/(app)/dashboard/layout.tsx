@@ -1,10 +1,8 @@
 import type { ReactNode } from "react"
-import { redirect } from "next/navigation"
-import { auth } from "@/auth"
 import { AppSidebar } from "@/components/app-sidebar"
 import { DashboardTopbar } from "@/components/dashboard-topbar"
-import { PageTransition } from "@/components/page-transition"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
 import { getCurrentUser } from "@/lib/current-user"
 
 export default async function DashboardLayout({
@@ -12,22 +10,22 @@ export default async function DashboardLayout({
 }: {
   children: ReactNode
 }) {
-  const session = await auth()
-  if (!session?.user) redirect("/auth")
-
-  const { credits } = await getCurrentUser()
+  const user = await getCurrentUser()
 
   return (
     <SidebarProvider>
-      <AppSidebar session={session} />
+      <AppSidebar
+        user={{ name: user.name, email: user.email, image: user.image }}
+      />
       <SidebarInset className="bg-background">
-        <DashboardTopbar credits={credits} />
+        <DashboardTopbar credits={user.credits} />
         <main className="flex-1">
           <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10 lg:py-12">
-            <PageTransition>{children}</PageTransition>
+            {children}
           </div>
         </main>
       </SidebarInset>
+      <Toaster richColors position="top-right" />
     </SidebarProvider>
   )
 }

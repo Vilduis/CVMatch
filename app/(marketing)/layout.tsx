@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { auth } from "@/auth"
 import LogoMark from "@/components/logo-mark"
 import Navbar from "@/components/navbar"
 
@@ -10,16 +9,10 @@ const footerLinks = [
   { label: "Crear cuenta", href: "/auth?tab=registro" },
 ]
 
-export default async function MarketingLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
-  const session = await auth()
-
+export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <Navbar session={session} />
+      <Navbar />
       {children}
       <footer className="border-t border-border/60">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6">

@@ -11,7 +11,6 @@ import {
   TrendingUp,
   Upload,
 } from "lucide-react"
-import { auth } from "@/auth"
 import {
   Accordion,
   AccordionContent,
@@ -90,11 +89,7 @@ const faqs = [
   },
 ]
 
-export default async function HomePage() {
-  const session = await auth()
-  const isLoggedIn = Boolean(session?.user)
-  const ctaHref = isLoggedIn ? "/dashboard/analizar" : undefined
-
+export default function HomePage() {
   return (
     <main className="relative">
       <BackgroundGrid />
@@ -108,7 +103,7 @@ export default async function HomePage() {
             </span>
           </Reveal>
 
-          <Reveal delay={0.05}>
+          <Reveal>
             <h1 className="mt-6 text-center text-[44px] leading-[1.05] font-semibold tracking-tight sm:text-6xl lg:text-[72px]">
               El match entre tu CV
               <br />
@@ -118,7 +113,7 @@ export default async function HomePage() {
             </h1>
           </Reveal>
 
-          <Reveal delay={0.1}>
+          <Reveal>
             <p className="mx-auto mt-6 max-w-xl text-center text-[15px] leading-relaxed text-muted-foreground sm:text-base">
               Sube tu CV, pega la descripción del puesto y recibe un análisis
               con puntaje, fortalezas, brechas y mejoras concretas — listo para
@@ -126,23 +121,14 @@ export default async function HomePage() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.15}>
+          <Reveal>
             <div className="mt-8 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
-              {ctaHref ? (
-                <Button asChild size="lg" className="w-full gap-1.5 sm:w-auto">
-                  <Link href={ctaHref}>
-                    Analizar mi CV
-                    <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-              ) : (
-                <Button asChild size="lg" className="w-full gap-1.5 sm:w-auto">
-                  <Link href="/auth?tab=registro">
-                    Empezar gratis
-                    <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-              )}
+              <Button asChild size="lg" className="w-full gap-1.5 sm:w-auto">
+                <Link href="/auth?tab=registro">
+                  Empezar gratis
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
               <Button
                 asChild
                 size="lg"
@@ -157,7 +143,7 @@ export default async function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.22}>
+          <Reveal>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px] text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
                 <CircleCheck className="size-3.5 text-[var(--success)]" />5
@@ -176,7 +162,7 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto mt-16 max-w-6xl px-4 sm:mt-20 sm:px-6">
-          <Reveal delay={0.1}>
+          <Reveal>
             <HeroVisual />
           </Reveal>
         </div>
@@ -196,8 +182,8 @@ export default async function HomePage() {
           </Reveal>
 
           <div className="mt-14 grid grid-cols-1 gap-x-12 gap-y-10 sm:grid-cols-3">
-            {steps.map(({ n, icon: Icon, title, desc }, i) => (
-              <Reveal key={n} delay={i * 0.06}>
+            {steps.map(({ n, icon: Icon, title, desc }) => (
+              <Reveal key={n}>
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <span className="font-mono text-[11px] font-medium text-muted-foreground">
@@ -246,8 +232,8 @@ export default async function HomePage() {
             </Reveal>
 
             <div className="mt-10 flex flex-col gap-6">
-              {features.map(({ icon: Icon, title, desc }, i) => (
-                <Reveal key={title} delay={i * 0.05}>
+              {features.map(({ icon: Icon, title, desc }) => (
+                <Reveal key={title}>
                   <div className="flex gap-4">
                     <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-card/60">
                       <Icon
@@ -284,7 +270,7 @@ export default async function HomePage() {
             />
           </Reveal>
 
-          <Reveal delay={0.1}>
+          <Reveal>
             <ResultPreview />
           </Reveal>
         </div>
@@ -306,7 +292,7 @@ export default async function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.08}>
+          <Reveal>
             <Accordion type="single" collapsible>
               {faqs.map(({ q, a }) => (
                 <AccordionItem key={q} value={q}>

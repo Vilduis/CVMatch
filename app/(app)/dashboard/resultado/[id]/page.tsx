@@ -11,7 +11,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { db } from "@/db"
-import { analyses } from "@/db/schema"
+import { analyses, tailoredCvs } from "@/db/schema"
 import { getCurrentUser } from "@/lib/current-user"
 import {
   Accordion,
@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScoreRing } from "@/components/ui/score-ring"
-import { StaggerList, StaggerListItem } from "@/components/stagger"
+import TailorCvCard from "@/components/cv/tailor-cv-card"
 
 type Level = "excellent" | "moderate" | "low"
 
@@ -87,10 +87,19 @@ export default async function ResultadoPage({
 }) {
   const { id } = await params
   const user = await getCurrentUser()
-  // Solo el dueño puede ver su análisis
-  const analysis = await db.query.analyses.findFirst({
-    where: and(eq(analyses.id, id), eq(analyses.userId, user.id)),
-  })
+  const [analysis, tailored] = await Promise.all([
+    // Solo el dueño puede ver su análisis
+    db.query.analyses.findFirst({
+      where: and(eq(analyses.id, id), eq(analyses.userId, user.id)),
+    }),
+    db.query.tailoredCvs.findFirst({
+      where: and(
+        eq(tailoredCvs.analysisId, id),
+        eq(tailoredCvs.userId, user.id)
+      ),
+      columns: { analysisId: true },
+    }),
+  ])
   if (!analysis) notFound()
 
   const score = analysis.matchScore
@@ -171,6 +180,12 @@ export default async function ResultadoPage({
           </div>
         </div>
       </section>
+
+      <TailorCvCard
+        analysisId={analysis.id}
+        hasTailored={Boolean(tailored)}
+        credits={user.credits}
+      />
 
       <Tabs defaultValue="fortalezas">
         <TabsList className="w-full">
@@ -313,13 +328,13 @@ function ResultList({
     )
   }
   return (
-    <StaggerList className="mt-6 flex flex-col">
+    <ul className="stagger mt-6 flex flex-col">
       {items.map((item, i) => (
         <ResultItem key={i} index={i} tone={tone} numbered={numbered}>
           {item}
         </ResultItem>
       ))}
-    </StaggerList>
+    </ul>
   )
 }
 
@@ -342,7 +357,7 @@ function ResultItem({
         : "bg-muted-foreground/50"
 
   return (
-    <StaggerListItem className="group flex items-start gap-4 border-t border-border/40 py-3.5 first:border-t-0 sm:py-4">
+    <li className="group flex items-start gap-4 border-t border-border/40 py-3.5 first:border-t-0 sm:py-4">
       {numbered ? (
         <span className="mt-0.5 inline-flex w-6 shrink-0 font-mono text-[11px] font-medium text-muted-foreground tabular-nums">
           {String(index + 1).padStart(2, "0")}
@@ -356,7 +371,7 @@ function ResultItem({
       <p className="text-[13.5px] leading-relaxed text-foreground/85">
         {children}
       </p>
-    </StaggerListItem>
+    </li>
   )
 }
 
