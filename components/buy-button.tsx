@@ -37,7 +37,12 @@ export default function BuyButton({
       const data = await res.json()
 
       if (res.status === 401) {
-        toast.error("Debes iniciar sesión para comprar créditos")
+        toast.error("Debes iniciar sesión para comprar créditos", {
+          action: {
+            label: "Iniciar sesión",
+            onClick: () => (window.location.href = "/auth?tab=login"),
+          },
+        })
         setLoading(false)
         return
       }
@@ -45,7 +50,9 @@ export default function BuyButton({
 
       window.location.href = data.url
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error al procesar el pago")
+      toast.error(
+        err instanceof Error ? err.message : "Error al procesar el pago"
+      )
       setLoading(false)
     }
   }

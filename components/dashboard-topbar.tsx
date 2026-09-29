@@ -41,13 +41,12 @@ export function DashboardTopbar({ credits }: TopbarProps) {
         <BreadcrumbList className="text-[12.5px]">
           {segments.map((seg, i) => {
             const isLast = i === segments.length - 1
-            // Hide dynamic ids (e.g. resultado/[uuid]) — show "Resultado" label only
+            // Oculta el uuid de resultado/[id]
             const isDynamicId = i > 0 && segments[i - 1] === "resultado"
             if (isDynamicId) return null
 
             const label =
-              segmentLabels[seg] ??
-              seg.charAt(0).toUpperCase() + seg.slice(1)
+              segmentLabels[seg] ?? seg.charAt(0).toUpperCase() + seg.slice(1)
             const href = "/" + segments.slice(0, i + 1).join("/")
 
             return (
@@ -72,12 +71,16 @@ export function DashboardTopbar({ credits }: TopbarProps) {
 
       <div className="flex items-center gap-1.5">
         <CreditsBadge credits={credits} />
-        <Link href="/dashboard/analizar" className="hidden sm:block">
-          <Button size="sm" className="h-7 gap-1 px-2.5 text-[12px]">
+        <Button
+          asChild
+          size="sm"
+          className="hidden h-7 gap-1 px-2.5 text-[12px] sm:inline-flex"
+        >
+          <Link href="/dashboard/analizar">
             <Sparkles className="size-3" />
             Nuevo análisis
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </header>
   )
@@ -91,9 +94,7 @@ function CreditsBadge({ credits }: { credits: number }) {
       className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-2.5 py-1 text-[11.5px] font-medium text-foreground/85 transition-colors hover:border-border hover:text-foreground"
     >
       <CreditCard className="size-3 text-muted-foreground" />
-      <span className="font-mono tabular-nums">
-        {credits}
-      </span>
+      <span className="font-mono tabular-nums">{credits}</span>
       <span className="text-muted-foreground">
         {low ? "créditos" : "análisis"}
       </span>

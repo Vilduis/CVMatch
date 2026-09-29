@@ -1,9 +1,7 @@
-import Stripe from "stripe"
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { PLANS, type PlanId } from "@/lib/plans"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+import { isPlanId, PLANS } from "@/lib/plans"
+import { stripe } from "@/lib/stripe"
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -15,10 +13,10 @@ export async function POST(req: NextRequest) {
   }
 
   const { planId } = await req.json()
-  const plan = PLANS[planId as PlanId]
-  if (!plan) {
+  if (!isPlanId(planId)) {
     return NextResponse.json({ error: "Plan no válido" }, { status: 400 })
   }
+  const plan = PLANS[planId]
 
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ??

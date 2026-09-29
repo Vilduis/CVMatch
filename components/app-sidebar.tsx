@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import type { Session } from "next-auth"
 import { signOutAction } from "@/app/actions"
+import LogoMark from "@/components/logo-mark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -60,14 +61,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
       <SidebarHeader className="border-b border-sidebar-border px-2.5 py-3">
         <Link
           href="/"
-          className="flex items-center gap-2 rounded-md px-1.5 py-0.5 outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+          className="flex items-center gap-2 rounded-md px-1.5 py-0.5 outline-none group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
         >
-          <span
-            aria-hidden
-            className="flex size-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-primary/90 to-primary/60 text-[10px] font-bold text-primary-foreground ring-1 ring-primary/40"
-          >
-            CV
-          </span>
+          <LogoMark className="h-5" />
           <span className="truncate text-[13px] font-semibold tracking-tight text-sidebar-foreground group-data-[collapsible=icon]:hidden">
             CVMatch
           </span>
@@ -80,11 +76,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
           items={workspaceNav}
           pathname={pathname}
         />
-        <NavGroup
-          label="Cuenta"
-          items={accountNav}
-          pathname={pathname}
-        />
+        <NavGroup label="Cuenta" items={accountNav} pathname={pathname} />
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-1.5">
@@ -102,12 +94,16 @@ function NavGroup({
   pathname,
 }: {
   label: string
-  items: { title: string; href: string; icon: React.ComponentType<{ className?: string }> }[]
+  items: {
+    title: string
+    href: string
+    icon: React.ComponentType<{ className?: string }>
+  }[]
   pathname: string
 }) {
   return (
     <SidebarGroup className="px-0 py-1">
-      <SidebarGroupLabel className="px-2 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground/70">
+      <SidebarGroupLabel className="px-2 text-[10px] font-medium tracking-[0.16em] text-muted-foreground/70 uppercase">
         {label}
       </SidebarGroupLabel>
       <SidebarMenu>
@@ -122,7 +118,7 @@ function NavGroup({
                 className={cn(
                   "h-8 gap-2.5 rounded-md px-2 text-[13px] font-medium text-sidebar-foreground/75",
                   "hover:bg-sidebar-accent/70 hover:text-sidebar-foreground",
-                  "data-active:bg-sidebar-accent data-active:text-sidebar-foreground data-active:font-medium"
+                  "data-active:bg-sidebar-accent data-active:font-medium data-active:text-sidebar-foreground"
                 )}
               >
                 <Link href={href}>
@@ -143,7 +139,11 @@ function UserWidget({ session }: { session: Session | null }) {
 
   if (!session?.user) {
     return (
-      <SidebarMenuButton asChild tooltip="Iniciar sesión" className="h-8 rounded-md text-[13px]">
+      <SidebarMenuButton
+        asChild
+        tooltip="Iniciar sesión"
+        className="h-8 rounded-md text-[13px]"
+      >
         <Link href="/">
           <User className="size-3.5" />
           <span>Iniciar sesión</span>
@@ -171,10 +171,10 @@ function UserWidget({ session }: { session: Session | null }) {
             </AvatarFallback>
           </Avatar>
           <div className="flex min-w-0 flex-1 flex-col text-left group-data-[collapsible=icon]:hidden">
-            <span className="truncate text-[12.5px] font-medium leading-tight">
+            <span className="truncate text-[12.5px] leading-tight font-medium">
               {session.user.name ?? "Sin nombre"}
             </span>
-            <span className="truncate text-[10.5px] text-muted-foreground leading-tight">
+            <span className="truncate text-[10.5px] leading-tight text-muted-foreground">
               {session.user.email}
             </span>
           </div>

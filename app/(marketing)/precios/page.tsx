@@ -19,14 +19,15 @@ export default function PreciosPage() {
       <div className="container mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-28">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
               Precios
             </p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
               Paga una vez. Sin suscripción.
             </h1>
             <p className="mx-auto mt-4 max-w-md text-[14px] leading-relaxed text-muted-foreground">
-              Cada crédito = 1 análisis completo. Compra una vez y úsalos a tu ritmo.
+              Cada crédito = 1 análisis completo. Compra una vez y úsalos a tu
+              ritmo.
             </p>
           </div>
         </Reveal>
@@ -65,12 +66,13 @@ export default function PreciosPage() {
                   <span className="font-mono text-[11px] font-medium text-muted-foreground">
                     S/
                   </span>
-                  <span className="font-mono text-5xl font-semibold tabular-nums tracking-tight">
+                  <span className="font-mono text-5xl font-semibold tracking-tight tabular-nums">
                     {plan.precio}
                   </span>
                 </div>
                 <p className="mt-1 text-[11px] text-muted-foreground">
-                  S/ {(parseFloat(plan.precio) / plan.credits).toFixed(2)} por análisis
+                  S/ {(parseFloat(plan.precio) / plan.credits).toFixed(2)} por
+                  análisis
                 </p>
 
                 <ul className="mt-7 flex-1 space-y-2.5 text-[13px] text-foreground/85">

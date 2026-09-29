@@ -27,7 +27,8 @@ export function DeleteAccountDialog() {
       try {
         await deleteAccountAction()
       } catch (err) {
-        const message = err instanceof Error ? err.message : "No se pudo eliminar la cuenta"
+        const message =
+          err instanceof Error ? err.message : "No se pudo eliminar la cuenta"
         if (!message.includes("NEXT_REDIRECT")) {
           toast.error(message)
           setOpen(false)

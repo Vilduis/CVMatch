@@ -31,18 +31,3 @@ export function StaggerList(props: HTMLMotionProps<"ul">) {
 export function StaggerListItem(props: HTMLMotionProps<"li">) {
   return <motion.li variants={item} {...props} />
 }
-
-export function StaggerDiv(props: HTMLMotionProps<"div">) {
-  return (
-    <motion.div
-      initial="hidden"
-      animate="show"
-      variants={container}
-      {...props}
-    />
-  )
-}
-
-export function StaggerDivItem(props: HTMLMotionProps<"div">) {
-  return <motion.div variants={item} {...props} />
-}

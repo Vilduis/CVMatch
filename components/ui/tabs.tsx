@@ -31,8 +31,7 @@ const tabsListVariants = cva(
       variant: {
         default:
           "relative h-9 gap-6 border-b border-border/60 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col group-data-vertical/tabs:border-b-0 group-data-vertical/tabs:border-l",
-        pill:
-          "h-9 gap-1 rounded-md border border-border/60 bg-muted/40 p-1 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
+        pill: "h-9 gap-1 rounded-md border border-border/60 bg-muted/40 p-1 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
       },
     },
     defaultVariants: {
@@ -72,7 +71,7 @@ function TabsTrigger({
         // Default underline tabs (Linear / Vercel style)
         "group-data-[variant=default]/tabs-list:h-9 group-data-[variant=default]/tabs-list:px-0 group-data-[variant=default]/tabs-list:text-muted-foreground group-data-[variant=default]/tabs-list:hover:text-foreground",
         "group-data-[variant=default]/tabs-list:data-active:text-foreground",
-        "group-data-[variant=default]/tabs-list:after:absolute group-data-[variant=default]/tabs-list:after:inset-x-0 group-data-[variant=default]/tabs-list:after:-bottom-px group-data-[variant=default]/tabs-list:after:h-px group-data-[variant=default]/tabs-list:after:bg-primary group-data-[variant=default]/tabs-list:after:scale-x-0 group-data-[variant=default]/tabs-list:after:origin-left group-data-[variant=default]/tabs-list:after:transition-transform group-data-[variant=default]/tabs-list:after:duration-200 group-data-[variant=default]/tabs-list:after:ease-out",
+        "group-data-[variant=default]/tabs-list:after:absolute group-data-[variant=default]/tabs-list:after:inset-x-0 group-data-[variant=default]/tabs-list:after:-bottom-px group-data-[variant=default]/tabs-list:after:h-px group-data-[variant=default]/tabs-list:after:origin-left group-data-[variant=default]/tabs-list:after:scale-x-0 group-data-[variant=default]/tabs-list:after:bg-primary group-data-[variant=default]/tabs-list:after:transition-transform group-data-[variant=default]/tabs-list:after:duration-200 group-data-[variant=default]/tabs-list:after:ease-out",
         "group-data-[variant=default]/tabs-list:data-active:after:scale-x-100",
         // Pill variant
         "group-data-[variant=pill]/tabs-list:h-7 group-data-[variant=pill]/tabs-list:rounded-sm group-data-[variant=pill]/tabs-list:px-3 group-data-[variant=pill]/tabs-list:text-muted-foreground group-data-[variant=pill]/tabs-list:hover:text-foreground",

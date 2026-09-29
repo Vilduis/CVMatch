@@ -29,4 +29,9 @@ export const PLANS = {
 } as const
 
 export type PlanId = keyof typeof PLANS
+
+export function isPlanId(value: unknown): value is PlanId {
+  return typeof value === "string" && Object.hasOwn(PLANS, value)
+}
+
 export const plansList = Object.values(PLANS)

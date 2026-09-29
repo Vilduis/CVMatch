@@ -64,20 +64,18 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
 
   return (
     <StaggerListItem className="group grid grid-cols-[auto_1fr_auto] items-center gap-3 border-t border-border/60 px-4 py-3.5 transition-colors first:border-t-0 hover:bg-card/40 sm:grid-cols-[64px_1fr_auto_88px] sm:gap-4 sm:px-5 sm:py-4">
-      {/* Score */}
       <div className="flex flex-col items-start gap-0.5 sm:items-center">
         <span
-          className="font-mono text-2xl font-semibold leading-none tabular-nums"
+          className="font-mono text-2xl leading-none font-semibold tabular-nums"
           style={{ color }}
         >
           {analysis.matchScore}
         </span>
-        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:tracking-[0.1em]">
+        <span className="text-[10px] font-medium tracking-[0.12em] text-muted-foreground uppercase sm:tracking-[0.1em]">
           {label}
         </span>
       </div>
 
-      {/* Job description summary */}
       <div className="min-w-0">
         <p className="line-clamp-2 text-[13.5px] leading-snug text-foreground/90 sm:line-clamp-1">
           {summarize(analysis.jobDescription)}
@@ -88,13 +86,11 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
         </p>
       </div>
 
-      {/* Date (desktop) */}
       <p className="hidden text-right font-mono text-[11.5px] text-muted-foreground tabular-nums sm:block">
         {formatDate(created)}
         {!sameYear && ` ${formatYear(created)}`}
       </p>
 
-      {/* Actions */}
       <div className="flex items-center justify-end gap-1 sm:w-[88px]">
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -103,7 +99,7 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
               size="icon-sm"
               disabled={pending}
               aria-label="Eliminar análisis"
-              className="text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100 data-[state=open]:opacity-100"
+              className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive data-[state=open]:opacity-100"
             >
               <Trash2 className="size-3.5" />
             </Button>
@@ -128,16 +124,17 @@ export function AnalisisRow({ analysis }: { analysis: Analysis }) {
           </AlertDialogContent>
         </AlertDialog>
 
-        <Link href={`/dashboard/resultado/${analysis.id}`}>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 gap-1 px-2 text-[12px] text-muted-foreground hover:text-foreground"
-          >
+        <Button
+          asChild
+          size="sm"
+          variant="ghost"
+          className="h-7 gap-1 px-2 text-[12px] text-muted-foreground hover:text-foreground"
+        >
+          <Link href={`/dashboard/resultado/${analysis.id}`}>
             Ver
             <ArrowRight className="size-3" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </StaggerListItem>
   )

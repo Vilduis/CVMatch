@@ -1,10 +1,9 @@
-import Stripe from "stripe"
+import type Stripe from "stripe"
 import { eq, sql } from "drizzle-orm"
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
 import { stripeEvents, users } from "@/db/schema"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+import { stripe } from "@/lib/stripe"
 
 export const dynamic = "force-dynamic"
 
@@ -25,10 +24,17 @@ export async function POST(req: NextRequest) {
 
   let event: Stripe.Event
   try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET)
+    event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    )
   } catch (err) {
     const message = err instanceof Error ? err.message : "Webhook error"
-    return NextResponse.json({ error: `Firma inválida: ${message}` }, { status: 400 })
+    return NextResponse.json(
+      { error: `Firma inválida: ${message}` },
+      { status: 400 }
+    )
   }
 
   // Idempotencia: ignorar eventos ya procesados
@@ -55,9 +61,10 @@ export async function POST(req: NextRequest) {
       }
     }
   }
-
-  // Registrar el evento como procesado
-  await db.insert(stripeEvents).values({ eventId: event.id }).onConflictDoNothing()
+  await db
+    .insert(stripeEvents)
+    .values({ eventId: event.id })
+    .onConflictDoNothing()
 
   return NextResponse.json({ received: true })
 }

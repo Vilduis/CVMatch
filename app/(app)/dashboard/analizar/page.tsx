@@ -1,30 +1,13 @@
-import { cookies } from "next/headers"
-import { eq } from "drizzle-orm"
-import { auth } from "@/auth"
-import { db } from "@/db"
-import { users } from "@/db/schema"
+import { getCurrentUser } from "@/lib/current-user"
 import AnalizarForm from "./form"
-import { FREE_COOKIE, FREE_MAX } from "@/app/api/analyze/route"
 
 export default async function AnalizarPage() {
-  const session = await auth()
-  const cookieStore = await cookies()
-  const freeCount = parseInt(cookieStore.get(FREE_COOKIE)?.value ?? "0", 10)
-  const freeRemaining = Math.max(0, FREE_MAX - freeCount)
-
-  let credits: number | null = null
-  if (session?.user?.email) {
-    const user = await db.query.users.findFirst({
-      where: eq(users.email, session.user.email),
-      columns: { credits: true },
-    })
-    credits = user?.credits ?? 0
-  }
+  const { credits } = await getCurrentUser()
 
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
-        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
           Espacio de trabajo
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">
@@ -36,7 +19,7 @@ export default async function AnalizarPage() {
         </p>
       </header>
 
-      <AnalizarForm credits={credits} freeRemaining={freeRemaining} />
+      <AnalizarForm credits={credits} />
     </div>
   )
 }

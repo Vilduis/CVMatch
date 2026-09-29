@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import type { Session } from "next-auth"
 import { ArrowUpRight, LogOut } from "lucide-react"
-import { signInWithGoogle, signOutAction } from "@/app/actions"
+import { signOutAction } from "@/app/actions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,13 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
+import LogoMark from "./logo-mark"
 import MobileMenu from "./mobile-menu"
 
-const navLinks = [
-  { label: "Cómo funciona", href: "/#como-funciona" },
-  { label: "Precios", href: "/#precios" },
-  { label: "FAQ", href: "/#faq" },
-]
+const navLinks = [{ label: "Precios", href: "/precios" }]
 
 interface NavbarProps {
   session: Session | null
@@ -49,7 +46,7 @@ export default function Navbar({ session }: NavbarProps) {
       <div className="container mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="group flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
+          className="group flex items-center gap-2 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <LogoMark />
           <span className="text-[15px] font-semibold tracking-tight">
@@ -75,7 +72,7 @@ export default function Navbar({ session }: NavbarProps) {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="ml-2 flex items-center gap-2 rounded-md py-1 pl-1 pr-2.5 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                  className="ml-2 flex items-center gap-2 rounded-md py-1 pr-2.5 pl-1 transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Avatar className="size-7">
                     <AvatarImage
@@ -110,7 +107,10 @@ export default function Navbar({ session }: NavbarProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild variant="destructive">
                   <form action={signOutAction}>
-                    <button type="submit" className="flex w-full items-center gap-2">
+                    <button
+                      type="submit"
+                      className="flex w-full items-center gap-2"
+                    >
                       <LogOut className="size-3.5" />
                       Cerrar sesión
                     </button>
@@ -119,11 +119,19 @@ export default function Navbar({ session }: NavbarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <form action={signInWithGoogle} className="ml-1">
-              <Button type="submit" size="sm" className="h-8 px-3 text-[13px]">
-                Empezar gratis
+            <div className="ml-2 flex items-center gap-1.5">
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="h-8 px-3 text-[13px]"
+              >
+                <Link href="/auth?tab=login">Iniciar sesión</Link>
               </Button>
-            </form>
+              <Button asChild size="sm" className="h-8 px-3 text-[13px]">
+                <Link href="/auth?tab=registro">Empezar gratis</Link>
+              </Button>
+            </div>
           )}
         </nav>
 
@@ -132,18 +140,5 @@ export default function Navbar({ session }: NavbarProps) {
         </div>
       </div>
     </header>
-  )
-}
-
-function LogoMark() {
-  return (
-    <span
-      aria-hidden
-      className="relative flex size-7 items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-primary/90 to-primary/60 ring-1 ring-primary/40"
-    >
-      <span className="text-[11px] font-bold tracking-tight text-primary-foreground">
-        CV
-      </span>
-    </span>
   )
 }

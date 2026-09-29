@@ -1,11 +1,7 @@
-import { eq } from "drizzle-orm"
-import { redirect } from "next/navigation"
 import Link from "next/link"
 import { ArrowUpRight, Check, Lock, ShieldCheck, Sparkles } from "lucide-react"
-import { auth } from "@/auth"
-import { db } from "@/db"
-import { users } from "@/db/schema"
 import BuyButton from "@/components/buy-button"
+import { getCurrentUser } from "@/lib/current-user"
 import { plansList } from "@/lib/plans"
 
 const benefits = [
@@ -16,22 +12,13 @@ const benefits = [
 ]
 
 export default async function CreditosPage() {
-  const session = await auth()
-  if (!session?.user?.email) redirect("/")
-
-  const dbUser = await db.query.users.findFirst({
-    where: eq(users.email, session.user.email),
-    columns: { credits: true },
-  })
-  if (!dbUser) redirect("/")
-
-  const credits = dbUser.credits
+  const { credits } = await getCurrentUser()
   const isEmpty = credits === 0
 
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-1">
-        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
           Cuenta
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Créditos</h1>
@@ -41,14 +28,13 @@ export default async function CreditosPage() {
         </p>
       </header>
 
-      {/* Balance */}
       <section className="rounded-xl border border-border/60 bg-card/40 p-6 sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-1">
-            <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+            <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
               Saldo disponible
             </p>
-            <p className="font-mono text-6xl font-semibold leading-none tabular-nums sm:text-7xl">
+            <p className="font-mono text-6xl leading-none font-semibold tabular-nums sm:text-7xl">
               {credits}
             </p>
             <p className="text-[13px] text-muted-foreground">
@@ -65,11 +51,10 @@ export default async function CreditosPage() {
         </div>
       </section>
 
-      {/* Plans */}
       <section className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-3">
           <div>
-            <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+            <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
               Recargar
             </p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight">
@@ -116,12 +101,13 @@ export default async function CreditosPage() {
                 <span className="font-mono text-[11px] font-medium text-muted-foreground">
                   S/
                 </span>
-                <span className="font-mono text-3xl font-semibold tabular-nums tracking-tight">
+                <span className="font-mono text-3xl font-semibold tracking-tight tabular-nums">
                   {plan.precio}
                 </span>
               </div>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                S/ {(parseFloat(plan.precio) / plan.credits).toFixed(2)} por análisis
+                S/ {(parseFloat(plan.precio) / plan.credits).toFixed(2)} por
+                análisis
               </p>
 
               <ul className="mt-5 flex-1 space-y-1.5 text-[12.5px] text-foreground/80">

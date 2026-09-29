@@ -2,7 +2,9 @@ import { createRequire } from "module"
 import mammoth from "mammoth"
 
 const require = createRequire(import.meta.url)
-const pdfParse = require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>
+const pdfParse = require("pdf-parse") as (
+  buf: Buffer
+) => Promise<{ text: string }>
 
 export async function parseCv(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer())
@@ -13,7 +15,8 @@ export async function parseCv(file: File): Promise<string> {
   }
 
   if (
-    file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+    file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
     file.name.endsWith(".docx")
   ) {
     const result = await mammoth.extractRawText({ buffer })

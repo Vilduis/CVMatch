@@ -14,13 +14,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { signInWithGoogle, signOutAction } from "@/app/actions"
+import { signOutAction } from "@/app/actions"
 
-const navLinks = [
-  { label: "Cómo funciona", href: "/#como-funciona" },
-  { label: "Precios", href: "/#precios" },
-  { label: "FAQ", href: "/#faq" },
-]
+const navLinks = [{ label: "Precios", href: "/precios" }]
 
 interface MobileMenuProps {
   session: Session | null
@@ -102,14 +98,21 @@ export default function MobileMenu({ session }: MobileMenuProps) {
               </form>
             </div>
           ) : (
-            <form action={signInWithGoogle} className="flex flex-col gap-2">
-              <Button type="submit" size="sm" className="w-full">
-                Empezar gratis
-              </Button>
+            <div className="flex flex-col gap-2">
+              <SheetClose asChild>
+                <Button asChild size="lg" className="w-full">
+                  <Link href="/auth?tab=registro">Empezar gratis</Link>
+                </Button>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button asChild variant="outline" size="lg" className="w-full">
+                  <Link href="/auth?tab=login">Iniciar sesión</Link>
+                </Button>
+              </SheetClose>
               <p className="text-center text-[11px] text-muted-foreground">
                 5 análisis gratis al crear cuenta
               </p>
-            </form>
+            </div>
           )}
         </div>
       </SheetContent>

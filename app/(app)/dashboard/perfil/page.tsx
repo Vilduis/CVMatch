@@ -1,13 +1,12 @@
 import { eq } from "drizzle-orm"
-import { redirect } from "next/navigation"
 import Link from "next/link"
 import { ArrowUpRight, LogOut, Mail } from "lucide-react"
-import { auth } from "@/auth"
 import { signOutAction } from "@/app/actions"
 import { db } from "@/db"
-import { users, analyses } from "@/db/schema"
+import { analyses } from "@/db/schema"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { getCurrentUser } from "@/lib/current-user"
 import { DeleteAccountDialog } from "./delete-account-dialog"
 
 function formatDate(d: Date) {
@@ -18,13 +17,7 @@ function formatDate(d: Date) {
 }
 
 export default async function PerfilPage() {
-  const session = await auth()
-  if (!session?.user?.email) redirect("/")
-
-  const dbUser = await db.query.users.findFirst({
-    where: eq(users.email, session.user.email),
-  })
-  if (!dbUser) redirect("/")
+  const dbUser = await getCurrentUser()
 
   const analysisCount = await db.$count(
     analyses,
@@ -37,12 +30,12 @@ export default async function PerfilPage() {
     { label: "Miembro desde", value: formatDate(new Date(dbUser.createdAt)) },
   ]
 
-  const initial = session.user.name?.[0]?.toUpperCase() ?? "U"
+  const initial = dbUser.name?.[0]?.toUpperCase() ?? "U"
 
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-1">
-        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
           Cuenta
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Perfil</h1>
@@ -51,13 +44,9 @@ export default async function PerfilPage() {
         </p>
       </header>
 
-      {/* Identity */}
       <section className="flex flex-col items-start gap-5 rounded-xl border border-border/60 bg-card/40 p-6 sm:flex-row sm:items-center sm:p-8">
         <Avatar className="size-14 shrink-0 sm:size-16">
-          <AvatarImage
-            src={session.user.image ?? ""}
-            alt={session.user.name ?? ""}
-          />
+          <AvatarImage src={dbUser.image ?? ""} alt={dbUser.name ?? ""} />
           <AvatarFallback className="bg-muted text-lg font-semibold">
             {initial}
           </AvatarFallback>
@@ -65,11 +54,11 @@ export default async function PerfilPage() {
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-xl font-semibold tracking-tight">
-            {session.user.name ?? "Sin nombre"}
+            {dbUser.name ?? "Sin nombre"}
           </p>
           <p className="mt-1 inline-flex items-center gap-1.5 truncate text-[13px] text-muted-foreground">
             <Mail className="size-3" />
-            {session.user.email}
+            {dbUser.email}
           </p>
         </div>
 
@@ -86,15 +75,14 @@ export default async function PerfilPage() {
         </form>
       </section>
 
-      {/* Summary */}
       <section className="flex flex-col gap-3">
-        <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
           Resumen
         </p>
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-border/60 bg-border/40 sm:grid-cols-3">
           {summary.map(({ label, value }) => (
             <div key={label} className="flex flex-col gap-1 bg-card/40 p-5">
-              <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
                 {label}
               </p>
               <p className="font-mono text-2xl font-semibold tabular-nums sm:text-3xl">
@@ -105,9 +93,8 @@ export default async function PerfilPage() {
         </div>
       </section>
 
-      {/* Links */}
       <section className="flex flex-col gap-3">
-        <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
           Accesos rápidos
         </p>
         <div className="overflow-hidden rounded-xl border border-border/60">
@@ -130,16 +117,16 @@ export default async function PerfilPage() {
         </div>
       </section>
 
-      {/* Danger zone */}
       <section className="flex flex-col gap-3">
-        <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-destructive/80">
+        <p className="text-[10.5px] font-medium tracking-[0.16em] text-destructive/80 uppercase">
           Zona de peligro
         </p>
         <div className="flex flex-col items-start gap-4 rounded-xl border border-destructive/30 bg-destructive/5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="min-w-0">
             <p className="text-[13.5px] font-medium">Eliminar cuenta</p>
             <p className="mt-0.5 text-[12px] text-muted-foreground">
-              Borra tu cuenta, créditos e historial de análisis de forma permanente.
+              Borra tu cuenta, créditos e historial de análisis de forma
+              permanente.
             </p>
           </div>
           <DeleteAccountDialog />
@@ -167,12 +154,16 @@ function QuickLink({
     >
       <div className="min-w-0">
         <p className="text-[13.5px] font-medium">{title}</p>
-        <p className="mt-0.5 text-[12px] text-muted-foreground">{description}</p>
+        <p className="mt-0.5 text-[12px] text-muted-foreground">
+          {description}
+        </p>
       </div>
       <ArrowUpRight
         className={
           "size-3.5 shrink-0 text-muted-foreground transition-transform " +
-          (external ? "group-hover:-translate-y-0.5 group-hover:translate-x-0.5" : "group-hover:translate-x-0.5")
+          (external
+            ? "group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            : "group-hover:translate-x-0.5")
         }
       />
     </Link>

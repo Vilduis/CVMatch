@@ -1,10 +1,8 @@
 import { desc, eq, sql } from "drizzle-orm"
 import Link from "next/link"
-import { redirect } from "next/navigation"
 import { ArrowRight, FileSearch, Sparkles } from "lucide-react"
-import { auth } from "@/auth"
 import { db } from "@/db"
-import { analyses, users } from "@/db/schema"
+import { analyses } from "@/db/schema"
 import { Button } from "@/components/ui/button"
 import { StaggerList } from "@/components/stagger"
 import {
@@ -16,6 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { getCurrentUser } from "@/lib/current-user"
 import { AnalisisRow } from "./analisis-card"
 
 const PER_PAGE = 10
@@ -25,14 +24,7 @@ export default async function HistorialPage({
 }: {
   searchParams: Promise<{ page?: string }>
 }) {
-  const session = await auth()
-  if (!session?.user?.email) redirect("/")
-
-  const dbUser = await db.query.users.findFirst({
-    where: eq(users.email, session.user.email),
-    columns: { id: true },
-  })
-  if (!dbUser) redirect("/")
+  const dbUser = await getCurrentUser()
 
   // Stats sobre TODOS los análisis (agregado), no solo la página actual.
   const [agg] = await db
@@ -87,12 +79,12 @@ export default async function HistorialPage({
             Todos tus análisis ordenados del más reciente al más antiguo.
           </p>
         </div>
-        <Link href="/dashboard/analizar">
-          <Button size="sm" className="h-8 gap-1.5">
+        <Button asChild size="sm" className="h-8 gap-1.5">
+          <Link href="/dashboard/analizar">
             <Sparkles className="size-3.5" />
             Nuevo análisis
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </header>
 
       {total > 0 && (
@@ -222,12 +214,12 @@ function EmptyState() {
       <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-muted-foreground">
         Cada análisis que ejecutes aparecerá aquí con su score y resumen.
       </p>
-      <Link href="/dashboard/analizar" className="mt-6">
-        <Button className="gap-1.5">
+      <Button asChild className="mt-6 gap-1.5">
+        <Link href="/dashboard/analizar">
           Analizar mi CV
           <ArrowRight className="size-3.5" />
-        </Button>
-      </Link>
+        </Link>
+      </Button>
     </div>
   )
 }

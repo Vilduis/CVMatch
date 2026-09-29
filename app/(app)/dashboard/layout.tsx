@@ -1,30 +1,21 @@
 import type { ReactNode } from "react"
 import { redirect } from "next/navigation"
-import { eq } from "drizzle-orm"
 import { auth } from "@/auth"
-import { db } from "@/db"
-import { users } from "@/db/schema"
 import { AppSidebar } from "@/components/app-sidebar"
 import { DashboardTopbar } from "@/components/dashboard-topbar"
 import { PageTransition } from "@/components/page-transition"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { getCurrentUser } from "@/lib/current-user"
 
-async function getUserCredits(email: string): Promise<number> {
-  const [row] = await db
-    .select({ credits: users.credits })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1)
-  return row?.credits ?? 0
-}
-
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: ReactNode
+}) {
   const session = await auth()
-  if (!session?.user) redirect("/")
+  if (!session?.user) redirect("/auth")
 
-  const credits = session.user.email
-    ? await getUserCredits(session.user.email)
-    : 0
+  const { credits } = await getCurrentUser()
 
   return (
     <SidebarProvider>

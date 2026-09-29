@@ -1,21 +1,13 @@
 "use server"
 
-import { eq, and } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
-import { auth } from "@/auth"
 import { db } from "@/db"
-import { analyses, users } from "@/db/schema"
+import { analyses } from "@/db/schema"
+import { getCurrentUser } from "@/lib/current-user"
 
 export async function deleteAnalysis(analysisId: string) {
-  const session = await auth()
-  if (!session?.user?.email) redirect("/")
-
-  const dbUser = await db.query.users.findFirst({
-    where: eq(users.email, session.user.email),
-    columns: { id: true },
-  })
-  if (!dbUser) redirect("/")
+  const dbUser = await getCurrentUser()
 
   await db
     .delete(analyses)

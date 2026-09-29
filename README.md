@@ -4,7 +4,7 @@ Plataforma web que analiza la compatibilidad entre un CV y una oferta de trabajo
 
 ## Modelo de negocio
 
-Pago único por paquete de créditos (sin suscripción). Cada análisis consume 1 crédito. El primer análisis es gratuito sin necesidad de registro. Los créditos se compran en paquetes con precios en Soles (PEN) vía Stripe.
+Pago único por paquete de créditos (sin suscripción). Cada análisis consume 1 crédito y requiere cuenta. Cada cuenta nueva recibe 5 créditos gratis al registrarse. Los créditos se compran en paquetes con precios en Soles (PEN) vía Stripe.
 
 ## Stack
 
@@ -23,11 +23,12 @@ Pago único por paquete de créditos (sin suscripción). Cada análisis consume 
 ## Comandos
 
 ```bash
-npm run dev        # Servidor de desarrollo (Turbopack)
-npm run build      # Build de producción
-npm run typecheck  # Verificar tipos sin emitir
-npm run lint       # ESLint
-npm run format     # Prettier sobre archivos .ts y .tsx
+pnpm install    # Instalar dependencias
+pnpm dev        # Servidor de desarrollo (Turbopack)
+pnpm build      # Build de producción
+pnpm typecheck  # Verificar tipos sin emitir
+pnpm lint       # ESLint
+pnpm format     # Prettier sobre archivos .ts y .tsx
 ```
 
 ## Variables de entorno requeridas

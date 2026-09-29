@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import {
@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { db } from "@/db"
 import { analyses } from "@/db/schema"
+import { getCurrentUser } from "@/lib/current-user"
 import {
   Accordion,
   AccordionContent,
@@ -25,7 +26,12 @@ import { StaggerList, StaggerListItem } from "@/components/stagger"
 
 type Level = "excellent" | "moderate" | "low"
 
-function getLevel(score: number): { level: Level; label: string; message: string; color: string } {
+function getLevel(score: number): {
+  level: Level
+  label: string
+  message: string
+  color: string
+} {
   if (score >= 70)
     return {
       level: "excellent",
@@ -80,8 +86,10 @@ export default async function ResultadoPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  const user = await getCurrentUser()
+  // Solo el dueño puede ver su análisis
   const analysis = await db.query.analyses.findFirst({
-    where: eq(analyses.id, id),
+    where: and(eq(analyses.id, id), eq(analyses.userId, user.id)),
   })
   if (!analysis) notFound()
 
@@ -112,7 +120,6 @@ export default async function ResultadoPage({
         </span>
       </div>
 
-      {/* ── Score hero ── */}
       <section className="grid grid-cols-1 gap-6 rounded-xl border border-border/60 bg-card/40 p-6 sm:grid-cols-[auto_1fr] sm:gap-8 sm:p-8">
         <div className="flex items-center justify-center sm:items-start">
           <ScoreRing score={score} size={160} strokeWidth={6} />
@@ -120,7 +127,7 @@ export default async function ResultadoPage({
 
         <div className="flex flex-col gap-4">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
               Match score
             </p>
             <h1
@@ -136,7 +143,7 @@ export default async function ResultadoPage({
 
           {jobSummary && (
             <div className="rounded-lg border border-border/60 bg-card px-4 py-3">
-              <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
                 Puesto analizado
               </p>
               <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/85">
@@ -146,23 +153,25 @@ export default async function ResultadoPage({
           )}
 
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Link href="/dashboard/analizar">
-              <Button size="sm" className="w-full gap-1.5 sm:w-auto">
+            <Button asChild size="sm" className="w-full gap-1.5 sm:w-auto">
+              <Link href="/dashboard/analizar">
                 <Sparkles className="size-3.5" />
                 Analizar otro puesto
                 <ArrowRight className="size-3 opacity-70" />
-              </Button>
-            </Link>
-            <Link href="/dashboard/historial">
-              <Button size="sm" variant="outline" className="w-full sm:w-auto">
-                Mi historial
-              </Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
+              <Link href="/dashboard/historial">Mi historial</Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* ── Tabs ── */}
       <Tabs defaultValue="fortalezas">
         <TabsList className="w-full">
           <TabsTrigger value="fortalezas" className="gap-1.5">
@@ -257,8 +266,6 @@ export default async function ResultadoPage({
   )
 }
 
-/* ─────────────────────────────────────────────────────────────── */
-
 function CountBadge({ n }: { n: number }) {
   return (
     <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground tabular-nums">
@@ -278,7 +285,7 @@ function SectionHeading({
 }) {
   return (
     <div className="mt-6 flex flex-col gap-1.5">
-      <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
         {eyebrow}
       </p>
       <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
@@ -358,17 +365,21 @@ function StarGuide() {
     { letter: "S", label: "Situación", desc: "El contexto en el que ocurrió." },
     { letter: "T", label: "Tarea", desc: "Tu responsabilidad específica." },
     { letter: "A", label: "Acción", desc: "Qué hiciste tú, no el equipo." },
-    { letter: "R", label: "Resultado", desc: "Impacto medible cuando sea posible." },
+    {
+      letter: "R",
+      label: "Resultado",
+      desc: "Impacto medible cuando sea posible.",
+    },
   ]
   return (
     <div className="mt-6 rounded-xl border border-border/60 bg-card/40 p-5">
-      <p className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="text-[10.5px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
         Método STAR
       </p>
       <div className="mt-3 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-border/40 sm:grid-cols-4">
         {items.map(({ letter, label, desc }) => (
           <div key={letter} className="flex flex-col gap-1 bg-card p-4">
-            <span className="font-mono text-2xl font-semibold leading-none text-primary">
+            <span className="font-mono text-2xl leading-none font-semibold text-primary">
               {letter}
             </span>
             <span className="mt-1 text-[12px] font-medium">{label}</span>

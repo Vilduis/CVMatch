@@ -18,17 +18,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
 interface AnalizarFormProps {
-  credits: number | null
-  freeRemaining: number
+  credits: number
 }
 
-const ACCEPT = ".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+const ACCEPT =
+  ".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 const MAX_MB = 10
 const MAX_BYTES = MAX_MB * 1024 * 1024
 const JD_RECOMMENDED = 200
 const JD_MAX = 6000
 
-export default function AnalizarForm({ credits, freeRemaining }: AnalizarFormProps) {
+export default function AnalizarForm({ credits }: AnalizarFormProps) {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -36,9 +36,6 @@ export default function AnalizarForm({ credits, freeRemaining }: AnalizarFormPro
   const [jobDescription, setJobDescription] = useState("")
   const [loading, setLoading] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-
-  const isGuest = credits === null
-  const canAnalyze = isGuest ? freeRemaining > 0 : credits > 0
 
   function handleFile(f: File | undefined | null) {
     if (!f) return
@@ -75,7 +72,8 @@ export default function AnalizarForm({ credits, freeRemaining }: AnalizarFormPro
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!file) return void toast.error("Sube tu CV en PDF o Word")
-    if (!jobDescription.trim()) return void toast.error("Pega la descripción del puesto")
+    if (!jobDescription.trim())
+      return void toast.error("Pega la descripción del puesto")
 
     setLoading(true)
     try {
@@ -83,19 +81,24 @@ export default function AnalizarForm({ credits, freeRemaining }: AnalizarFormPro
       formData.append("cv", file)
       formData.append("jobDescription", jobDescription)
 
-      const res = await fetch("/api/analyze", { method: "POST", body: formData })
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? "Error al analizar")
 
       router.push(`/dashboard/resultado/${data.id}`)
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Ocurrió un error inesperado")
+      toast.error(
+        err instanceof Error ? err.message : "Ocurrió un error inesperado"
+      )
       setLoading(false)
     }
   }
 
-  if (!canAnalyze) {
-    return <NoCreditsEmpty isGuest={isGuest} />
+  if (credits <= 0) {
+    return <NoCreditsEmpty />
   }
 
   return (
@@ -123,17 +126,11 @@ export default function AnalizarForm({ credits, freeRemaining }: AnalizarFormPro
       <SubmitRow
         loading={loading}
         disabled={!file || !jobDescription.trim()}
-        creditsLine={
-          isGuest
-            ? `${freeRemaining} análisis gratis restante${freeRemaining !== 1 ? "s" : ""}`
-            : `${credits} crédito${credits !== 1 ? "s" : ""} disponible${credits !== 1 ? "s" : ""}`
-        }
+        creditsLine={`${credits} crédito${credits !== 1 ? "s" : ""} disponible${credits !== 1 ? "s" : ""}`}
       />
     </form>
   )
 }
-
-/* ─────────────────────────────────────────────────────────────── */
 
 function Dropzone({
   file,
@@ -159,11 +156,7 @@ function Dropzone({
   onDrop: (e: React.DragEvent) => void
 }) {
   return (
-    <FieldShell
-      label="CV"
-      step="01"
-      help="PDF o Word (.docx) · Máx. 10 MB"
-    >
+    <FieldShell label="CV" step="01" help="PDF o Word (.docx) · Máx. 10 MB">
       <div
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
@@ -203,7 +196,10 @@ function EmptyDropzone({
   return (
     <>
       <div className="flex size-11 items-center justify-center rounded-full bg-muted">
-        <UploadCloud className="size-5 text-muted-foreground" strokeWidth={1.75} />
+        <UploadCloud
+          className="size-5 text-muted-foreground"
+          strokeWidth={1.75}
+        />
       </div>
       <div className="flex flex-col gap-0.5">
         <p className="text-[13.5px] font-medium">
@@ -220,7 +216,7 @@ function EmptyDropzone({
           </button>
         </p>
       </div>
-      <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="mt-1 font-mono text-[10.5px] tracking-[0.16em] text-muted-foreground uppercase">
         PDF · DOCX · 10 MB
       </p>
     </>
@@ -283,7 +279,7 @@ function JobDescriptionField({
           disabled={disabled}
           className="min-h-[260px] resize-none font-sans text-[13.5px] leading-relaxed"
         />
-        <div className="pointer-events-none absolute bottom-2.5 right-3 flex items-center gap-2 text-[11px] text-muted-foreground/80">
+        <div className="pointer-events-none absolute right-3 bottom-2.5 flex items-center gap-2 text-[11px] text-muted-foreground/80">
           {tooShort && (
             <span className="inline-flex items-center gap-1 text-[var(--warning)]">
               <CircleAlert className="size-3" />
@@ -324,7 +320,9 @@ function FieldShell({
         </div>
       </div>
       {children}
-      <p className="text-[11px] leading-relaxed text-muted-foreground">{help}</p>
+      <p className="text-[11px] leading-relaxed text-muted-foreground">
+        {help}
+      </p>
     </div>
   )
 }
@@ -408,19 +406,17 @@ function LoadingHint() {
   )
 }
 
-function NoCreditsEmpty({ isGuest }: { isGuest: boolean }) {
+function NoCreditsEmpty() {
   return (
     <div className="rounded-xl border border-border/60 bg-card/40 p-10 text-center sm:p-14">
       <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-[var(--warning)]/30 bg-[var(--warning)]/10">
         <CircleAlert className="size-5 text-[var(--warning)]" />
       </div>
-      <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+      <p className="mt-5 text-[11px] font-medium tracking-[0.18em] text-muted-foreground uppercase">
         Sin créditos
       </p>
       <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-        {isGuest
-          ? "Ya usaste tus 5 análisis gratis."
-          : "No tienes créditos disponibles."}
+        No tienes créditos disponibles.
       </h2>
       <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-muted-foreground">
         Compra un paquete y sigue analizando puestos sin límite. Los créditos no
@@ -428,23 +424,24 @@ function NoCreditsEmpty({ isGuest }: { isGuest: boolean }) {
       </p>
 
       <div className="mt-7 flex flex-col items-center justify-center gap-2 sm:flex-row">
-        <Link href="/precios">
-          <Button size="lg" className="gap-1.5">
+        <Button asChild size="lg" className="gap-1.5">
+          <Link href="/precios">
             Ver planes
             <ArrowRight className="size-3.5" />
-          </Button>
-        </Link>
-        <Link href="/dashboard/historial">
-          <Button size="lg" variant="ghost" className="text-muted-foreground hover:text-foreground">
-            Ver análisis anteriores
-          </Button>
-        </Link>
+          </Link>
+        </Button>
+        <Button
+          asChild
+          size="lg"
+          variant="ghost"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <Link href="/dashboard/historial">Ver análisis anteriores</Link>
+        </Button>
       </div>
     </div>
   )
 }
-
-/* ─────────────────────────────────────────────────────────────── */
 
 function formatBytes(b: number) {
   if (b < 1024) return `${b} B`

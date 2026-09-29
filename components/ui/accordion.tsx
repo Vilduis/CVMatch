@@ -26,7 +26,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("not-last:border-b border-border/60", className)}
+      className={cn("border-border/60 not-last:border-b", className)}
       {...props}
     />
   )
@@ -48,7 +48,10 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <ChevronDownIcon data-slot="accordion-trigger-icon" className="pointer-events-none mt-0.5 shrink-0 group-aria-expanded/accordion-trigger:rotate-180" />
+        <ChevronDownIcon
+          data-slot="accordion-trigger-icon"
+          className="pointer-events-none mt-0.5 shrink-0 group-aria-expanded/accordion-trigger:rotate-180"
+        />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )
